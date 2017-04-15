@@ -4,11 +4,7 @@ return [
     'settings' => [
         'displayErrorDetails' => true,
         'addContentLengthHeader' => false,
-        'language_default' => 'en',
-        'locales' => [
-            'de-DE' => 'de',
-            'en-US' => 'en',
-            'en-GB' => 'en',
-        ],
+        'locale_default' => 'en-US',
+        'locales' => ['de-DE', 'en-US', 'en-GB'],
     ]
 ];

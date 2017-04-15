@@ -30,13 +30,15 @@ abstract class AbstractController
         $this->container = $container;
         $this->settings = $this->container->get('settings');
 
-        $accept = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-        $this->language = $this->getPreferredLanguage($accept, $this->settings['locales'], $this->settings['language_default']);
-        $this->locale = array_search($this->language, $this->settings['locales']);
+        $accept = $this->container->request->getHeaderLine('Accept-Language');
+        $this->locale = $this->chooseLocale($accept, $this->settings['locales'], $this->settings['locale_default']);
+        $this->language = mb_substr($this->locale, 0, 2);
     }
 
     /**
-     * Get client's preferred language
+     * Choose Locale
+     *
+     * Try to match client preferred and application supported locales
      *
      * @param 	string	$accept			Accept-Language header
      * @param 	array	$available		Available locales
@@ -45,7 +47,7 @@ abstract class AbstractController
      * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */
-    public function getPreferredLanguage($accept, $available, $default)
+    public function chooseLocale($accept, $available, $default)
     {
         $reply = array();
         $available = array_flip($available);
@@ -54,7 +56,7 @@ abstract class AbstractController
             $available2[substr($key, 0, 2)] = $key;
         }
 
-        preg_match_all('~([\w]+)(?:[^,\d]+([\d.]+))?~', $accept, $matches, PREG_SET_ORDER);
+        preg_match_all('~([\w-]+)(?:[^,\d]+([\d.]+))?~', $accept, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             $temp = explode('-', $match[1]) + array('', '');
             $lang = array_shift($temp);
