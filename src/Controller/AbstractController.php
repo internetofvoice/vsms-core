@@ -30,9 +30,9 @@ abstract class AbstractController
         $this->container = $container;
         $this->settings = $this->container->get('settings');
 
-        $accept = $this->container->request->getHeaderLine('Accept-Language');
+        $accept = $container->request->getHeaderLine('Accept-Language');
         $this->locale = $this->chooseLocale($accept, $this->settings['locales'], $this->settings['locale_default']);
-        $this->language = mb_substr($this->locale, 0, 2);
+        $this->language = substr($this->locale, 0, (strpos($this->locale, '-')));
     }
 
     /**
