@@ -7,26 +7,24 @@ use Slim\Container;
 /**
  * AbstractController
  *
- * @author	Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 abstract class AbstractController
 {
-	protected $container;
-	protected $settings;
+    protected $container;
+    protected $settings;
 
-	protected $language;
-	protected $locale;
+    protected $language;
+    protected $locale;
 
-	/**
-	 * Constructor
-	 *
-	 * @param 	\Slim\Container         $container	Slim app container
-	 * @access	public
-	 * @author	a.schmidt@internet-of-voice.de
-	 */
-    public function __construct(Container $container)
-    {
+    /**
+     * Constructor
+     *
+     * @param   \Slim\Container $container  Slim app container
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     */
+    public function __construct(Container $container) {
         $this->container = $container;
         $this->settings = $this->container->get('settings');
 
@@ -40,15 +38,14 @@ abstract class AbstractController
      *
      * Try to match client preferred and application supported locales
      *
-     * @param 	string	$accept			Accept-Language header
-     * @param 	array	$available		Available locales
-     * @param 	string	$default		Default locale
+     * @param   string  $accept     Accept-Language header
+     * @param   array   $available  Available locales
+     * @param   string  $default    Default locale
      * @return  string
-     * @access	public
-     * @author	a.schmidt@internet-of-voice.de
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
      */
-    public function chooseLocale($accept, $available, $default)
-    {
+    public function chooseLocale($accept, $available, $default) {
         $reply = array();
         $available = array_flip($available);
         $available2 = array();
