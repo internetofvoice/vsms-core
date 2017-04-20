@@ -6,6 +6,7 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Environment;
+use Tests\Fixtures\MockController;
 
 /**
  * AbstractControllerTest
@@ -44,8 +45,8 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
         $container = $app->getContainer();
         $container['request'] = $request; // override with mocked request
 
-        $app->get('/get-language', \Tests\Fixtures\MockController::class . ':getLanguage');
-        $app->get('/get-locale', \Tests\Fixtures\MockController::class . ':getLocale');
+        $app->get('/get-language', MockController::class . ':getLanguage');
+        $app->get('/get-locale', MockController::class . ':getLocale');
 
         return $app->process($request, new Response());
     }
