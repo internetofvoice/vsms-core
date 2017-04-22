@@ -24,10 +24,10 @@ abstract class AbstractSkillController extends AbstractController
 
     protected $skillHandle;
     protected $askApplicationId = [
-        'dev' => '',
-        'test' => '',
+        'dev'   => '',
+        'test'  => '',
         'stage' => '',
-        'prod' => '',
+        'prod'  => '',
     ];
 
     protected $messages = [

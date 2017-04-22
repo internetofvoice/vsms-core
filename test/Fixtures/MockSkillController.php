@@ -22,7 +22,6 @@ class MockSkillController extends AbstractSkillController
     protected $messages = [
         'default' => 'I am afraid I did not understand you.',
         'welcome' => 'Welcome to Test Skill.',
-        'stop'    => 'Good bye.',
         'clue'    => 'If you need help, please say help.',
         'help'    => 'This is the help text.',
     ];
@@ -58,19 +57,6 @@ class MockSkillController extends AbstractSkillController
         $this->alexaResponse
             ->respond($this->messages['help'])
             ->withCard($this->cards['help']['title'], $this->cards['help']['content'])
-        ;
-    }
-
-    /**
-     * AMAZON.StopIntent request
-     *
-     * @access  protected
-     * @author  a.schmidt@internet-of-voice.de
-     */
-    protected function intentAMAZONStopIntent() {
-        $this->alexaResponse
-            ->respond($this->messages['stop'])
-            ->endSession(true)
         ;
     }
 
