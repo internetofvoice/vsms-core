@@ -11,7 +11,7 @@ namespace InternetOfVoice\VSMS\Core\Helper;
 class TranslationHelper
 {
     /** @var array $messages  */
-    protected $messages = [];
+    protected $messages;
 
     /** @var string locale */
     protected $locale;
@@ -28,7 +28,21 @@ class TranslationHelper
 	 * @author	a.schmidt@internet-of-voice.de
 	 */
     public function __construct($locale, $language = '') {
-        $this->locale = $locale;
+        $this->reset($locale, $language);
+    }
+
+    /**
+     * Reset to initial state
+     *
+     * @access	public
+     * @param   string      $locale     Locale
+     * @param   string      $language   Language
+     * @author	a.schmidt@internet-of-voice.de
+     */
+    public function reset($locale, $language = '') {
+        $this->messages = array();
+        $this->locale   = $locale;
+
         if(empty($language)) {
             $this->language = substr($locale, 0, (strpos($locale, '-')));
         } else {
@@ -59,9 +73,9 @@ class TranslationHelper
     /**
      * Get locale
      *
-	 * @access	public
+     * @access	public
      * @return  string
-	 * @author	a.schmidt@internet-of-voice.de
+     * @author	a.schmidt@internet-of-voice.de
      */
     public function getLocale() {
         return $this->locale;
@@ -70,9 +84,9 @@ class TranslationHelper
     /**
      * Get language
      *
-	 * @access	public
+     * @access	public
      * @return  string
-	 * @author	a.schmidt@internet-of-voice.de
+     * @author	a.schmidt@internet-of-voice.de
      */
     public function getLanguage() {
         return $this->language;

@@ -9,17 +9,11 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractSkillController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-class MockSkillController extends AbstractSkillController
+final class MockSkillController extends AbstractSkillController
 {
-    /** @var string $skillHandle */
-    protected $skillHandle = 'example';
-
     /** @var array $askApplicationId */
     protected $askApplicationId = [
-        'dev'   => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
-        'test'  => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
-        'stage' => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
-        'prod'  => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
+        'dev-test' => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
     ];
 
     /** @var array $messages */
@@ -37,6 +31,22 @@ class MockSkillController extends AbstractSkillController
             'content' => 'This is the help text.',
         ]
     ];
+
+
+    /**
+     * Invocation method
+     *
+     * @param   \Slim\Http\Request      $request    Slim request
+     * @param   \Slim\Http\Response     $response   Slim response
+     * @param   array                   $args       Arguments
+     * @return  \Slim\Http\Response
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     * @see     routing configuration
+     */
+    public function invoke($request, $response, $args) {
+        return $this->handle($request, $response, $args);
+    }
 
 
     /**

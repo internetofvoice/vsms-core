@@ -5,7 +5,7 @@ return [
         'displayErrorDetails'       => true,
         'addContentLengthHeader'    => false,
         'validateCertificate'       => false,
-        'environment'               => 'dev',
+        'environment'               => 'dev-test',
 
         'locale_default'            => 'en-US',
         'locales'                   => ['de-DE', 'en-US', 'en-GB'],

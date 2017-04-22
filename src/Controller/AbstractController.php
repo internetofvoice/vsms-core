@@ -18,12 +18,6 @@ abstract class AbstractController
     /** @var array $settings */
     protected $settings;
 
-    /** @var string $language */
-    protected $language;
-
-    /** @var string $locale */
-    protected $locale;
-
     /** @var \InternetOfVoice\VSMS\Core\Helper\TranslationHelper $i18n */
     protected $i18n;
 
@@ -38,10 +32,8 @@ abstract class AbstractController
         $this->container = $container;
         $this->settings = $this->container->get('settings');
 
-        $accept = $container->request->getHeaderLine('Accept-Language');
-        $this->locale   = $this->chooseLocale($accept, $this->settings['locales'], $this->settings['locale_default']);
-        $this->language = substr($this->locale, 0, (strpos($this->locale, '-')));
-        $this->i18n     = new TranslationHelper($this->locale, $this->language);
+        $locale = $this->chooseLocale($container->request->getHeaderLine('Accept-Language'));
+        $this->i18n = new TranslationHelper($locale, substr($locale, 0, (strpos($locale, '-'))));
     }
 
     /**
@@ -49,25 +41,25 @@ abstract class AbstractController
      *
      * Try to match client preferred and application supported locales
      *
-     * @param   string  $accept     Accept-Language header
-     * @param   array   $available  Available locales
-     * @param   string  $default    Default locale
+     * @param   string  $accept     Accepted languages
      * @return  string
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
      */
-    public function chooseLocale($accept, $available, $default) {
-        $reply = array();
-        $available = array_flip($available);
+    public function chooseLocale($accept) {
+        $reply      = array();
+        $available  = array_flip($this->settings['locales']);
         $available2 = array();
+
         foreach ($available as $key => $value) {
             $available2[substr($key, 0, 2)] = $key;
         }
 
         preg_match_all('~([\w-]+)(?:[^,\d]+([\d.]+))?~', $accept, $matches, PREG_SET_ORDER);
+
         foreach ($matches as $match) {
-            $temp = explode('-', $match[1]) + array('', '');
-            $lang = array_shift($temp);
+            $temp  = explode('-', $match[1]) + array('', '');
+            $lang  = array_shift($temp);
             $value = isset($match[2]) ? (float)$match[2] : 1.0;
 
             // Full match (language_territory)?
@@ -86,6 +78,6 @@ abstract class AbstractController
             return key($reply);
         }
 
-        return $default;
+        return $this->settings['locale_default'];
     }
 }
