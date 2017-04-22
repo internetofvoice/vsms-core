@@ -11,7 +11,10 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractSkillController;
  */
 class MockSkillController extends AbstractSkillController
 {
+    /** @var string $skillHandle */
     protected $skillHandle = 'example';
+
+    /** @var array $askApplicationId */
     protected $askApplicationId = [
         'dev'   => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
         'test'  => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
@@ -19,6 +22,7 @@ class MockSkillController extends AbstractSkillController
         'prod'  => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
     ];
 
+    /** @var array $messages */
     protected $messages = [
         'default' => 'I am afraid I did not understand you.',
         'welcome' => 'Welcome to Test Skill.',
@@ -26,6 +30,7 @@ class MockSkillController extends AbstractSkillController
         'help'    => 'This is the help text.',
     ];
 
+    /** @var array $cars */
     protected $cards = [
         'help' => [
             'title'   => 'Help',

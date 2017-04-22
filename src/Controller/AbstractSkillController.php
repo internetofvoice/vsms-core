@@ -8,8 +8,7 @@ use Alexa\Request\Request as AlexaRequest;
 use Alexa\Request\SessionEndedRequest as AlexaSessionEndedRequest;
 use Alexa\Response\Response as AlexaResponse;
 use Exception;
-// use InternetOfVoice\VSMS\Helper\AppHelper;
-// use InternetOfVoice\VSMS\Helper\TranslationHelper;
+use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 use Slim\Container;
 
 /**
@@ -19,10 +18,16 @@ use Slim\Container;
  */
 abstract class AbstractSkillController extends AbstractController
 {
+    /** @var \Alexa\Request\Request $alexaRequest */
     protected $alexaRequest;
+
+    /** @var \Alexa\Response\Response $alexaResponse */
     protected $alexaResponse;
 
+    /** @var string $skillHandle */
     protected $skillHandle;
+
+    /** @var array $askApplicationId */
     protected $askApplicationId = [
         'dev'   => '',
         'test'  => '',
@@ -30,8 +35,13 @@ abstract class AbstractSkillController extends AbstractController
         'prod'  => '',
     ];
 
+    /** @var array $messages */
     protected $messages = [
         'default' => 'I am afraid I did not understand you.',
+    ];
+
+    /** @var array $cars */
+    protected $cars = [
     ];
 
     /**
@@ -122,7 +132,7 @@ abstract class AbstractSkillController extends AbstractController
                 );
 
                 $this->language = substr($this->locale, 0, (strpos($this->locale, '-')));
-                // $this->i18n = new TranslationHelper($this->locale, $this->settings['translation_path']);
+                $this->i18n     = new TranslationHelper($this->locale, $this->language);
             }
 
             return true;

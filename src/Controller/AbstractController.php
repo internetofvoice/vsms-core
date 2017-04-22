@@ -2,6 +2,7 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
+use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 use Slim\Container;
 
 /**
@@ -11,11 +12,20 @@ use Slim\Container;
  */
 abstract class AbstractController
 {
+    /** @var \Slim\Container $container */
     protected $container;
+
+    /** @var array $settings */
     protected $settings;
 
+    /** @var string $language */
     protected $language;
+
+    /** @var string $locale */
     protected $locale;
+
+    /** @var \InternetOfVoice\VSMS\Core\Helper\TranslationHelper $i18n */
+    protected $i18n;
 
     /**
      * Constructor
@@ -29,8 +39,9 @@ abstract class AbstractController
         $this->settings = $this->container->get('settings');
 
         $accept = $container->request->getHeaderLine('Accept-Language');
-        $this->locale = $this->chooseLocale($accept, $this->settings['locales'], $this->settings['locale_default']);
+        $this->locale   = $this->chooseLocale($accept, $this->settings['locales'], $this->settings['locale_default']);
         $this->language = substr($this->locale, 0, (strpos($this->locale, '-')));
+        $this->i18n     = new TranslationHelper($this->locale, $this->language);
     }
 
     /**
