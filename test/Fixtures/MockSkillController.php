@@ -11,8 +11,8 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractSkillController;
  */
 final class MockSkillController extends AbstractSkillController
 {
-    /** @var array $askApplicationId */
-    protected $askApplicationId = [
+    /** @var array $askApplicationIds */
+    protected $askApplicationIds = [
         'dev-test' => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
     ];
 

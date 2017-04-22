@@ -23,8 +23,8 @@ abstract class AbstractSkillController extends AbstractController
     /** @var \Alexa\Response\Response $alexaResponse */
     protected $alexaResponse;
 
-    /** @var array $askApplicationId */
-    protected $askApplicationId;
+    /** @var array $askApplicationIds */
+    protected $askApplicationIds;
 
     /**
      * Constructor
@@ -54,7 +54,7 @@ abstract class AbstractSkillController extends AbstractController
         // Instantiate AlexaRequest from request object
         $alexa = new AlexaRequest(
             $request->getBody()->getContents(),
-            $this->askApplicationId[$this->settings['environment']]
+            $this->askApplicationIds[$this->settings['environment']]
         );
 
         // Create AlexaRequest from request data

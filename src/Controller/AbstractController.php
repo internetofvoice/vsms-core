@@ -47,7 +47,7 @@ abstract class AbstractController
      * @author  a.schmidt@internet-of-voice.de
      */
     public function chooseLocale($accept) {
-        $reply      = array();
+        $locales    = array();
         $available  = array_flip($this->settings['locales']);
         $available2 = array();
 
@@ -63,19 +63,19 @@ abstract class AbstractController
             $value = isset($match[2]) ? (float)$match[2] : 1.0;
 
             // Full match (language_territory)?
-            if (isset($available[$match[1]]) && !isset($reply[$match[1]])) {
-                $reply[$match[1]] = $value;
+            if (isset($available[$match[1]]) && !isset($locales[$match[1]])) {
+                $locales[$match[1]] = $value;
             }
 
             // Language match (without territory)?
-            if (isset($available2[$lang]) && !isset($reply[$available2[$lang]])) {
-                $reply[$available2[$lang]] = $value - 0.05;
+            if (isset($available2[$lang]) && !isset($locales[$available2[$lang]])) {
+                $locales[$available2[$lang]] = $value - 0.05;
             }
         }
 
-        arsort($reply);
-        if (count($reply)) {
-            return key($reply);
+        if (count($locales)) {
+            arsort($locales);
+            return key($locales);
         }
 
         return $this->settings['locale_default'];
