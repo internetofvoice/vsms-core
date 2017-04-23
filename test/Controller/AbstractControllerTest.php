@@ -2,50 +2,34 @@
 
 namespace Tests\Controller;
 
-use Slim\App;
-use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\Environment;
+use Tests\Fixtures\MockController;
 
 /**
  * AbstractControllerTest
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
-class AbstractControllerTest extends \PHPUnit_Framework_TestCase
+class AbstractControllerTest extends ControllerTestCase
 {
     /**
-     * Mock and run application
+     * Run application
      *
      * @param   string              $method     request method
      * @param   string              $uri        request URI
      * @param   array|null          $headers    additional request headers
      * @param   array|object|null   $data       request data
      * @return  \Psr\Http\Message\ResponseInterface
-     * @access	public
-     * @author	a.schmidt@internet-of-voice.de
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
      */
-    public function runApp($method, $uri, $headers = [], $data = null)
-    {
-        $headers = array_merge([
-            'REQUEST_METHOD' => $method,
-            'REQUEST_URI'    => $uri
-        ], $headers);
+    public function runApp($method, $uri, $headers = [], $data = null) {
+        $settings = require __DIR__ . '/../Fixtures/settings.php';
+        $request  = $this->createRequest($method, $uri, $headers, $data);
+        $app      = $this->createApp($request, $settings);
 
-        $environment = Environment::mock($headers);
-        $request = Request::createFromEnvironment($environment);
-        if (isset($data)) {
-            $request = $request->withParsedBody($data);
-        }
-
-        $settings  = require __DIR__ . '/../Fixtures/settings.php';
-        $app       = new App($settings);
-        $container = $app->getContainer();
-        $container['request'] = $request; // override with mocked request
-
-        $app->get('/get-language', \Tests\Fixtures\MockController::class . ':getLanguage');
-        $app->get('/get-locale', \Tests\Fixtures\MockController::class . ':getLocale');
+        $app->get('/get-language', MockController::class . ':getLanguage');
+        $app->get('/get-locale', MockController::class . ':getLocale');
 
         return $app->process($request, new Response());
     }
@@ -53,11 +37,10 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test abstract controller
      *
-     * @access	public
-     * @author	a.schmidt@internet-of-voice.de
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
      */
-    public function testAbstractController()
-    {
+    public function testAbstractController() {
         $response = $this->runApp('GET', '/get-language', ['HTTP_ACCEPT_LANGUAGE' => 'de-DE,en;q=0.5']);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('de', (string)$response->getBody());
