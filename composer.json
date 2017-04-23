@@ -32,11 +32,8 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "ext-pdo": "*",
-        "ext-pdo_mysql": "*",
         "slim/slim": "^3.8",
-        "jakubsuchy/amazon-alexa-php": "dev-master",
-        "analog/analog": "dev-master"
+        "jakubsuchy/amazon-alexa-php": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": ">=5.7 < 6.0"
