@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Fixtures;
+namespace Tests\InternetOfVoice\VSMS\Core\Fixtures;
 
 use InternetOfVoice\VSMS\Core\Controller\AbstractController;
 

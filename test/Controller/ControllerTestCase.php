@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Controller;
+namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
 use Slim\App;
 use Slim\Http\Environment;

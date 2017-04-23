@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Controller;
+namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
 use Slim\Http\Response;
-use Tests\Fixtures\MockSkillController;
+use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockSkillController;
 
 /**
  * AbstractSkillControllerTest
@@ -38,10 +38,10 @@ class AbstractSkillControllerTest extends ControllerTestCase
      * testLaunchRequest
      */
     public function testLaunchRequest() {
-        $headerStub = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequestHeader.json'), true);
-        $bodyStub = file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequestBody-Launch.json');
-
-        $response = $this->runApp('POST', '/skill/test', $headerStub, $bodyStub);
+        $fixture  = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest.json'), true);
+        $header   = $fixture['header'];
+        $body     = json_encode($fixture['body-launch']);
+        $response = $this->runApp('POST', '/skill/test', $header, $body);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('"outputSpeech"', strval($response->getBody()));
 
@@ -61,10 +61,10 @@ class AbstractSkillControllerTest extends ControllerTestCase
      * testHelpIntent
      */
     public function testHelpIntent() {
-        $headerStub = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequestHeader.json'), true);
-        $bodyStub = file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequestBody-Help.json');
-
-        $response = $this->runApp('POST', '/skill/test', $headerStub, $bodyStub);
+        $fixture  = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest.json'), true);
+        $header   = $fixture['header'];
+        $body     = json_encode($fixture['body-help']);
+        $response = $this->runApp('POST', '/skill/test', $header, $body);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertContains('"outputSpeech"', strval($response->getBody()));
 
