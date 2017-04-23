@@ -68,7 +68,7 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
      * @author	a.schmidt@internet-of-voice.de
      */
     public function createApp($request, $settings) {
-        $app       = new App($settings);
+        $app = new App($settings);
         $container = $app->getContainer();
         $container['request'] = $request;
 

@@ -60,7 +60,7 @@ class TranslationHelper
      * @author	a.schmidt@internet-of-voice.de
      */
     public function addTranslation($path, $file) {
-        $filename = $path . DIRECTORY_SEPARATOR . $this->locale . DIRECTORY_SEPARATOR . $file . '.php';
+        $filename = $path . '/' . $this->locale . '/' . $file . '.php';
         if(!is_readable($filename)) {
             return false;
         } else {

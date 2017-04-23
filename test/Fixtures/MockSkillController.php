@@ -45,7 +45,9 @@ final class MockSkillController extends AbstractSkillController
      * @see     routing configuration
      */
     public function invoke($request, $response, $args) {
-        return $this->handle($request, $response, $args);
+        $this->createAlexaRequest($request);
+
+        return $this->dispatchAlexaRequest($response);
     }
 
 
