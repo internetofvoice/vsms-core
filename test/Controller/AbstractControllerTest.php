@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Controller;
+namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
 use Slim\Http\Response;
-use Tests\Fixtures\MockController;
+use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockController;
 
 /**
  * AbstractControllerTest

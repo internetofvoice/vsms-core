@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Core\Entity;
+namespace Tests\InternetOfVoice\VSMS\Core\Helper;
 
 use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 
