@@ -2,13 +2,7 @@
 
 namespace Tests\Controller;
 
-use Slim\App;
-use Slim\Http\Environment;
-use Slim\Http\Headers;
-use Slim\Http\Request;
-use Slim\Http\RequestBody;
 use Slim\Http\Response;
-use Slim\Http\Uri;
 use Tests\Fixtures\MockSkillController;
 
 /**
@@ -17,50 +11,23 @@ use Tests\Fixtures\MockSkillController;
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
 
-class AbstractSkillControllerTest extends \PHPUnit_Framework_TestCase
+class AbstractSkillControllerTest extends ControllerTestCase
 {
     /**
-     * Mock and run application
+     *Run application
      *
      * @param   string              $method     request method
      * @param   string              $uri        request URI
      * @param   array|null          $headers    additional request headers
      * @param   array|object|null   $data       request data
      * @return  \Psr\Http\Message\ResponseInterface
-     * @access	public
+     * @access	protected
      * @author	a.schmidt@internet-of-voice.de
      */
-    public function runApp($method, $uri, $headers = [], $data = null) {
-        $headers = array_merge([
-            'REQUEST_METHOD'             => $method,
-            'REQUEST_URI'                => $uri,
-            'CONTENT_TYPE'               => 'application/json',
-            'HTTP_SIGNATURE'             => '',
-            'HTTP_SIGNATURECERTCHAINURL' => '',
-        ], $headers);
-
-        // Fake _SERVER array as expected by vendor library
-        $_SERVER['HTTP_SIGNATURE']             = $headers['HTTP_SIGNATURE'];
-        $_SERVER['HTTP_SIGNATURECERTCHAINURL'] = $headers['HTTP_SIGNATURECERTCHAINURL'];
-
-        // Create prerequisites
-        $environment     = Environment::mock($headers);
-        $request_uri     = Uri::createFromString('http://example.com' . $uri); // example.com is irrelevant, we just want a route
-        $request_headers = Headers::createFromEnvironment($environment);
-        $cookies         = [];
-        $serverParams    = $environment->all();
-
-        // Create body with request data
-        $body = new RequestBody();
-        $body->write($data);
-        $body->rewind();
-
-        // Mock request
-        $request = new Request($method, $request_uri, $request_headers, $cookies, $serverParams, $body);
-
-        // Run app and return response
+    protected function runApp($method, $uri, $headers = [], $data = null) {
         $settings = require __DIR__ . '/../Fixtures/settings.php';
-        $app      = new App($settings);
+        $request  = $this->createRequest($method, $uri, $headers, $data);
+        $app      = $this->createApp($request, $settings);
 
         $app->map([$method], $uri, MockSkillController::class . ':invoke');
 

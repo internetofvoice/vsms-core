@@ -2,10 +2,7 @@
 
 namespace Tests\Controller;
 
-use Slim\App;
-use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\Environment;
 use Tests\Fixtures\MockController;
 
 /**
@@ -13,10 +10,10 @@ use Tests\Fixtures\MockController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-class AbstractControllerTest extends \PHPUnit_Framework_TestCase
+class AbstractControllerTest extends ControllerTestCase
 {
     /**
-     * Mock and run application
+     * Run application
      *
      * @param   string              $method     request method
      * @param   string              $uri        request URI
@@ -27,21 +24,9 @@ class AbstractControllerTest extends \PHPUnit_Framework_TestCase
      * @author  a.schmidt@internet-of-voice.de
      */
     public function runApp($method, $uri, $headers = [], $data = null) {
-        $headers = array_merge([
-            'REQUEST_METHOD' => $method,
-            'REQUEST_URI'    => $uri
-        ], $headers);
-
-        $environment = Environment::mock($headers);
-        $request = Request::createFromEnvironment($environment);
-        if (isset($data)) {
-            $request = $request->withParsedBody($data);
-        }
-
         $settings = require __DIR__ . '/../Fixtures/settings.php';
-        $app = new App($settings);
-        $container = $app->getContainer();
-        $container['request'] = $request; // override with mocked request
+        $request  = $this->createRequest($method, $uri, $headers, $data);
+        $app      = $this->createApp($request, $settings);
 
         $app->get('/get-language', MockController::class . ':getLanguage');
         $app->get('/get-locale', MockController::class . ':getLocale');

@@ -64,6 +64,7 @@ class TranslationHelper
         if(!is_readable($filename)) {
             return false;
         } else {
+            /** @noinspection PhpIncludeInspection */
             $add_messages = require($filename);
             $this->messages = array_merge($this->messages, $add_messages);
             return true;
