@@ -1,0 +1,7 @@
+{
+    "state": "current-state",
+    "client_id": "test",
+    "scope": "user",
+    "response_type": "token",
+    "redirect_uri": "https%3A%2F%2Fpitangui.amazon.com%2Fspa%2Fskill%2Faccount-linking-status.html%3FvendorId%3DAAAAAAAAAAAAAA"
+}
