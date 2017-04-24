@@ -13,6 +13,8 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractController;
 class MockController extends AbstractController
 {
     /**
+     * Get language
+     *
      * @param 	\Slim\Http\Request      $request 	Slim request
      * @param 	\Slim\Http\Response		$response 	Slim response
      * @return  \Slim\Http\Response
@@ -25,6 +27,8 @@ class MockController extends AbstractController
     }
 
     /**
+     * Get locale
+     *
      * @param 	\Slim\Http\Request      $request 	Slim request
      * @param 	\Slim\Http\Response		$response 	Slim response
      * @return  \Slim\Http\Response
