@@ -57,8 +57,7 @@ abstract class AbstractSkillController extends AbstractController
 
         // Reset i18n as Alexa request might contain a locale
         if($this->alexaRequest->locale) {
-            $locale = $this->chooseLocale($this->alexaRequest->locale);
-            $this->i18n->reset($locale, substr($locale, 0, (strpos($locale, '-'))));
+            $this->i18n->chooseLocale($this->alexaRequest->locale);
         }
     }
 

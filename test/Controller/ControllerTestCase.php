@@ -70,7 +70,16 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     public function createApp($request, $settings) {
         $app = new App($settings);
         $container = $app->getContainer();
+
         $container['request'] = $request;
+
+        $container['i18n'] = function(\Slim\Container $c) {
+            $settings = $c->get('settings');
+            return new \InternetOfVoice\VSMS\Core\Helper\TranslationHelper(
+                $settings['locales'],
+                $settings['locale_default']
+            );
+        };
 
         return $app;
     }

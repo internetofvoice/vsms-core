@@ -10,6 +10,12 @@ namespace InternetOfVoice\VSMS\Core\Helper;
 
 class TranslationHelper
 {
+    /** @var array $locales  */
+    protected $locales;
+
+    /** @var string $locale_default  */
+    protected $locale_default;
+
     /** @var array $messages  */
     protected $messages;
 
@@ -19,44 +25,74 @@ class TranslationHelper
     /** @var string language */
     protected $language;
 
+
  	/**
 	 * Constructor
 	 *
-	 * @access	public
-     * @param   string      $locale     Locale
-     * @param   string      $language   Language
+     * @param   array       $locales            Supported locales
+     * @param   string      $locale_default     Default locale
+     * @access	public
 	 * @author	a.schmidt@internet-of-voice.de
 	 */
-    public function __construct($locale, $language = '') {
-        $this->reset($locale, $language);
+    public function __construct($locales, $locale_default) {
+        $this->locales = $locales;
+        $this->locale_default = $locale_default;
     }
 
     /**
-     * Reset to initial state
+     * Choose Locale
      *
-     * @access	public
-     * @param   string      $locale     Locale
-     * @param   string      $language   Language
-     * @author	a.schmidt@internet-of-voice.de
+     * Try to match preferred and supported locales/languages
+     *
+     * @param   string  $preferred  Preferred locale(s) or language(s), e.g. Accept-Language header
+     * @return  bool
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
      */
-    public function reset($locale, $language = '') {
-        $this->messages = array();
-        $this->locale   = $locale;
+    public function chooseLocale($preferred) {
+        $available_locales   = array_flip($this->locales);
+        $available_languages = array();
+        foreach($available_locales as $key => $value) {
+            $available_languages[substr($key, 0, 2)] = $key;
+        }
 
-        if(empty($language)) {
-            $this->language = substr($locale, 0, (strpos($locale, '-')));
+        preg_match_all('~([\w-]+)(?:[^,\d]+([\d.]+))?~', $preferred, $matches, PREG_SET_ORDER);
+
+        $matched_locales = array();
+        foreach($matches as $match) {
+            $temp  = explode('-', $match[1]) + array('', '');
+            $lang  = array_shift($temp);
+            $value = isset($match[2]) ? (float)$match[2] : 1.0;
+
+            // Full match (language_territory)?
+            if(isset($available_locales[$match[1]]) && !isset($matched_locales[$match[1]])) {
+                $matched_locales[$match[1]] = $value;
+            }
+
+            // Language match (without territory)?
+            if(isset($available_languages[$lang]) && !isset($matched_locales[$available_languages[$lang]])) {
+                $matched_locales[$available_languages[$lang]] = $value - 0.05;
+            }
+        }
+
+        if(count($matched_locales)) {
+            arsort($matched_locales);
+            $this->setLocale(key($matched_locales));
+            return true;
         } else {
-            $this->language = $language;
+            $this->setLocale($this->locale_default);
+            return false;
         }
     }
+
 
     /**
      * Add translation
      *
-     * @access	public
      * @param   string      $path       Translation base path (up to, but without locale dir)
      * @param   string      $file       Translation file name (without .php extension)
      * @return  bool
+     * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */
     public function addTranslation($path, $file) {
@@ -71,34 +107,13 @@ class TranslationHelper
         }
     }
 
-    /**
-     * Get locale
-     *
-     * @access	public
-     * @return  string
-     * @author	a.schmidt@internet-of-voice.de
-     */
-    public function getLocale() {
-        return $this->locale;
-    }
-
-    /**
-     * Get language
-     *
-     * @access	public
-     * @return  string
-     * @author	a.schmidt@internet-of-voice.de
-     */
-    public function getLanguage() {
-        return $this->language;
-    }
 
     /**
      * Translate text
      *
+     * @return  mixed
      * @see     http://php.net/manual/en/function.sprintf.php
 	 * @access	public
-     * @return  mixed
 	 * @author	a.schmidt@internet-of-voice.de
      */
     public function t() {
@@ -113,5 +128,52 @@ class TranslationHelper
         }
 
         return vsprintf($this->messages[$message], $args);
+    }
+
+
+    /**
+     * Get locale
+     *
+     * @return  string
+     * @access	public
+     * @author	a.schmidt@internet-of-voice.de
+     */
+    public function getLocale() {
+        return $this->locale;
+    }
+
+    /**
+     * Set locale
+     *
+     * @param   string      $locale
+     * @access	public
+     * @author	a.schmidt@internet-of-voice.de
+     */
+    public function setLocale($locale) {
+        $this->locale   = $locale;
+        $this->language = substr($locale, 0, (strpos($locale, '-')));
+        $this->messages = array();
+    }
+
+    /**
+     * Get language
+     *
+     * @return  string
+     * @access	public
+     * @author	a.schmidt@internet-of-voice.de
+     */
+    public function getLanguage() {
+        return $this->language;
+    }
+
+    /**
+     * Set language
+     *
+     * @param   string      $language
+     * @access	public
+     * @author	a.schmidt@internet-of-voice.de
+     */
+    public function setLanguage($language) {
+        $this->$language = $language;
     }
 }
