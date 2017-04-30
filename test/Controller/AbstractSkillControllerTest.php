@@ -29,7 +29,7 @@ class AbstractSkillControllerTest extends ControllerTestCase
         $request  = $this->createRequest($method, $uri, $headers, $data);
         $app      = $this->createApp($request, $settings);
 
-        $app->map([$method], $uri, MockSkillController::class . ':invoke');
+        $app->map([$method], $uri, MockSkillController::class);
 
         return $app->process($request, new Response());
     }

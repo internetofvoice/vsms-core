@@ -109,6 +109,11 @@ abstract class AbstractSkillController extends AbstractController
     /** Required handler for AlexaLaunchRequest */
     abstract protected function launch();
 
+    /** Handlers for IntentRequests as per Amazon requirements */
+    abstract protected function intentAMAZONHelpIntent();
+    abstract protected function intentAMAZONStopIntent();
+    abstract protected function intentAMAZONCancelIntent();
+
     /** Required handler for AlexaSessionEndedRequest */
     abstract protected function sessionEnded();
 }

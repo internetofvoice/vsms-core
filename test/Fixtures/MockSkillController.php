@@ -22,6 +22,7 @@ final class MockSkillController extends AbstractSkillController
         'welcome' => 'Welcome to Test Skill.',
         'clue'    => 'If you need help, please say help.',
         'help'    => 'This is the help text.',
+        'stop'    => 'Good bye.',
     ];
 
     /** @var array $cars */
@@ -44,7 +45,7 @@ final class MockSkillController extends AbstractSkillController
      * @author  a.schmidt@internet-of-voice.de
      * @see     routing configuration
      */
-    public function invoke($request, $response, $args) {
+    public function __invoke($request, $response, $args) {
         $this->createAlexaRequest($request);
 
         return $this->dispatchAlexaRequest($response);
@@ -75,6 +76,29 @@ final class MockSkillController extends AbstractSkillController
             ->respond($this->messages['help'])
             ->withCard($this->cards['help']['title'], $this->cards['help']['content'])
         ;
+    }
+
+    /**
+     * AMAZON.StopIntent request
+     *
+     * @access  protected
+     * @author  a.schmidt@internet-of-voice.de
+     */
+    protected function intentAMAZONStopIntent() {
+        $this->alexaResponse
+            ->respond($this->messages['stop'])
+            ->endSession(true);
+        ;
+    }
+
+    /**
+     * AMAZON.CancelIntent request
+     *
+     * @access  protected
+     * @author  a.schmidt@internet-of-voice.de
+     */
+    protected function intentAMAZONCancelIntent() {
+        $this->intentAMAZONStopIntent();
     }
 
     /**
