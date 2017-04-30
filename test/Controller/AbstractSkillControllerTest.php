@@ -10,7 +10,6 @@ use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockSkillController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 class AbstractSkillControllerTest extends ControllerTestCase
 {
     /**

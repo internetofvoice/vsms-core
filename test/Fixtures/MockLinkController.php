@@ -9,7 +9,6 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractLinkController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 class MockLinkController extends AbstractLinkController
 {
     /**

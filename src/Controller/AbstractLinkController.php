@@ -2,6 +2,11 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
+/**
+ * AbstractLinkController
+ *
+ * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ */
 abstract class AbstractLinkController extends AbstractController
 {
     /**

@@ -7,7 +7,6 @@ namespace InternetOfVoice\VSMS\Core\Helper;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 class TranslationHelper
 {
     /** @var array $locales  */

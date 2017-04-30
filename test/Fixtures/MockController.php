@@ -9,7 +9,6 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 class MockController extends AbstractController
 {
     /**
