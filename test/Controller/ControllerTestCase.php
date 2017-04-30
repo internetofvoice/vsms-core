@@ -2,7 +2,11 @@
 
 namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
+use Analog\Handler\Ignore;
+use InternetOfVoice\VSMS\Core\Helper\LogHelper;
+use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 use Slim\App;
+use Slim\Container;
 use Slim\Http\Environment;
 use Slim\Http\Headers;
 use Slim\Http\Request;
@@ -69,15 +73,19 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
     public function createApp($request, $settings) {
         $app = new App($settings);
         $container = $app->getContainer();
-
         $container['request'] = $request;
-
-        $container['i18n'] = function(\Slim\Container $c) {
+        $container['i18n'] = function(Container $c) {
             $settings = $c->get('settings');
-            return new \InternetOfVoice\VSMS\Core\Helper\TranslationHelper(
+            return new TranslationHelper(
                 $settings['locales'],
                 $settings['locale_default']
             );
+        };
+
+        $container['logger'] = function(Container $c) {
+            $logger = new LogHelper();
+            $logger->handler(Ignore::init());
+            return $logger;
         };
 
         return $app;
