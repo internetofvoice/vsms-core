@@ -42,7 +42,7 @@ class LogHelper extends \Analog\Logger
      * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */
-    public function logRequest($request, $extra) {
+    public function logRequest($request, $extra = []) {
         $extra = count($extra) ? ' ' . json_encode($extra) : '';
 
         // Caller info
