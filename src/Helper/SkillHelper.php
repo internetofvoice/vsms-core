@@ -12,13 +12,12 @@ class SkillHelper
     /**
      * extractAmazonDate
      *
-     * Extracts AMAZON.DATE slot values to DateTime AND DateInterval objects.
-     * Returns an StdClass object with properties 'start' (DateTime object) and 'duration' (DateInterval object).
+     * Extracts AMAZON.DATE slot values to DateTime AND DateInterval. Returns a StdClass object with properties
+     * 'start' (DateTime object) and 'duration' (DateInterval object).
      *
-     * If slot value contain a time span like one year, 'start' will hold the first day at zero time,
+     * If slot value contains a time span like one year, 'start' will hold the first day at zero time,
      * and 'period' an interval of one year.
-     *
-     * If a specific date like 2017-05-10 is given, 'start is 2017-05-10 at zero time, 'period' is one day.
+     * If a specific date like 2017-05-10 is given, 'start' will be 2017-05-10 at zero time, and 'period' is one day.
      *
      * @param 	string      $amazon_date        AMAZON.DATE slot value
      * @return  \StdClass
