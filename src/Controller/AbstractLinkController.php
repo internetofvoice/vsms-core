@@ -2,6 +2,11 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
+/**
+ * AbstractLinkController
+ *
+ * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ */
 abstract class AbstractLinkController extends AbstractController
 {
     /**
@@ -54,16 +59,15 @@ abstract class AbstractLinkController extends AbstractController
     /**
      * Get redirect location
      *
-     * @param   string      $redirect_uri   Redirect URI (as sent by Amazon)
-     * @param   string      $state          State (as sent by Amazon)
+     * @param   array       $parameters     Amazon parameters (see validateRequestParameters())
      * @param   string      $access_token   Generated access token
      * @return  string
      * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */
-    public function getRedirectLocation($redirect_uri, $state, $access_token) {
+    public function getRedirectLocation($parameters, $access_token) {
         $location   = array();
-        $location[] = $redirect_uri . '#state=' . $state;
+        $location[] = $parameters['redirect_uri'] . '#state=' . $parameters['state'];
         $location[] = 'access_token=' . $access_token;
         $location[] = 'token_type=Bearer';
 

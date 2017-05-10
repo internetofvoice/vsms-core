@@ -9,7 +9,6 @@ use InternetOfVoice\VSMS\Core\Controller\AbstractLinkController;
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-
 class MockLinkController extends AbstractLinkController
 {
     /**
@@ -33,7 +32,7 @@ class MockLinkController extends AbstractLinkController
      * @author	a.schmidt@internet-of-voice.de
      */
     public function getLocation($request) {
-        $params = $this->validateRequestParameters($request, 'test');
-        return $this->getRedirectLocation($params['redirect_uri'], $params['state'], 'my_token');
+        $parameters = $this->validateRequestParameters($request, 'test');
+        return $this->getRedirectLocation($parameters, 'my_token');
     }
 }
