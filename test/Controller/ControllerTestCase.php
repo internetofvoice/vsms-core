@@ -4,6 +4,7 @@ namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
 use Analog\Handler\Ignore;
 use InternetOfVoice\VSMS\Core\Helper\LogHelper;
+use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
 use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 use Slim\App;
 use Slim\Container;
@@ -86,6 +87,10 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
             $logger = new LogHelper();
             $logger->handler(Ignore::init());
             return $logger;
+        };
+
+        $container['helper'] = function(Container $c) {
+            return new SkillHelper();
         };
 
         return $app;
