@@ -26,11 +26,12 @@ class SkillHelper
      * If we are right now in May, no backdating is performed.
      * Caution: please consider that a user might have actually referred to a future date.
      *
-     * @param 	string      $amazon_date        AMAZON.DATE slot value
+     * @param   string      $amazon_date        AMAZON.DATE slot value
      * @param   bool        $date_back          Enforce a date in the past?
      * @return  \StdClass
-     * @access	public
-     * @author	a.schmidt@internet-of-voice.de
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#date
      */
     public function extractAmazonDate($amazon_date, $date_back = false) {
         $start    = false;
@@ -105,8 +106,13 @@ class SkillHelper
             break;
         }
 
-        if($date_back && $origin) {
-            // if(in_future)
+        if($date_back && in_array($origin, ['date', 'month', 'season'])) {
+            $now = new \DateTime();
+            if($start > $now) {
+                // Need to date back by request for some origins - subtract one year, as origin was either:
+                // a date like 1st of May, a month like May or a season like Fall - all refer to an ambiguous year.
+                $start->sub(new \DateInterval('P1Y'));
+            }
         }
 
         return (object)['start' => $start, 'duration' => $duration];
@@ -124,11 +130,14 @@ class SkillHelper
      * hemisphere) might point to either current or last year. Current year
      * is enforced by parameter $force_year, else the seasons point to last year.
      *
+     * Based on code by http://biostall.com/get-the-current-season-using-php/
+     *
      * @param   int             $year                   Year
      * @param   string          $season                 Season {spring, summer, fall, winter}
      * @param   string          $hemisphere             Hemisphere {northern, southern, australia}
      * @param   bool            $force_year             Enforce given year?
      * @return  false|\DateTime
+
      */
     protected function getDateFromSeason($year, $season, $hemisphere, $force_year = true) {
         $date   = false;
