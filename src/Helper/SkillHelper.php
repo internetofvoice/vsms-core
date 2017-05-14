@@ -12,7 +12,7 @@ class SkillHelper
     /**
      * extractAmazonDate
      *
-     * Extracts an AMAZON.DATE slot value to a DateTime and a DateInterval.
+     * Extracts an AMAZON.DATE slot value to a DateTime and a DateInterval object.
      * Returns a StdClass object with properties 'start' (DateTime object) and 'duration' (DateInterval object).
      * If given date matches no meaningful date, both properties will be returned as boolean false.
      * Duration will be false, if date refers to now.
@@ -117,6 +117,57 @@ class SkillHelper
 
         return (object)['start' => $start, 'duration' => $duration];
     }
+
+    /**
+     * extractAmazonTime
+     *
+     * Extracts an AMAZON.TIME slot value and sets time portion of a given date (or today, if omitted)
+     *
+     * For time period indicators, the following times are returned:
+     * night: 00:00, morning: 06:00, afternoon: 12:00, evening: 18:00
+     *
+     * @param   string      $amazon_time        AMAZON.TIME slot value
+     * @param   \DateTime   $date               DateTime object or null
+     * @return  false|\DateTime
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#time
+     */
+    public function extractAmazonTime($amazon_time, $date = null) {
+        if(!$date instanceof \DateTime) {
+            $date = new \DateTime;
+        }
+
+        switch(true) {
+            case preg_match('~^(\d{2}:\d{2})~', $amazon_time, $matches):
+                list($hours, $minutes) = explode(':', $matches[1]);
+                $date->setTime($hours, $minutes, 0);
+            break;
+
+            case ($amazon_time == 'NI'):
+                $date->setTime(0, 0, 0);
+            break;
+
+            case ($amazon_time == 'MO'):
+                $date->setTime(6, 0, 0);
+            break;
+
+            case ($amazon_time == 'AF'):
+                $date->setTime(12, 0, 0);
+            break;
+
+            case ($amazon_time == 'EV'):
+                $date->setTime(18, 0, 0);
+            break;
+
+            default:
+                $date = false;
+            break;
+        }
+
+        return $date;
+    }
+
 
     /**
      * getDateFromSeason

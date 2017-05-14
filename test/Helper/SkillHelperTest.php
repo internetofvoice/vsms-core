@@ -12,7 +12,7 @@ use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
 
 class SkillHelperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testHelper() {
+    public function testAmazonDate() {
         $helper = new SkillHelper();
 
         // Now
@@ -63,5 +63,13 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         // Backdating of future month
         $result = $helper->extractAmazonDate((date('Y') + 1) . '-' . date('m'), true);
         $this->assertEquals(date('Y'), $result->start->format('Y'));
+    }
+
+    public function testAmazonTime() {
+        $helper = new SkillHelper();
+        $result = $helper->extractAmazonTime('16:17', new \DateTime('2017-05-14'));
+        $this->assertEquals('2017-05-14 16:17:00', $result->format('Y-m-d H:i:s'));
+        $result = $helper->extractAmazonTime('AF', new \DateTime('2017-05-14'));
+        $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
     }
 }
