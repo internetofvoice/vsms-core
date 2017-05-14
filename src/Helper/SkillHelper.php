@@ -170,6 +170,92 @@ class SkillHelper
 
 
     /**
+     * convertDateTimeToHuman
+     *
+     * Converts a DatTime object to a string that can be outspoken by Alexa
+     *
+     * Omits year, if date is current year. Omits minutes, if zero.
+     * Can be configured to reply with relative day names (today, yesterday, friday, ...) instead of day number
+     *
+     * Options array values:
+     * relative:  return "today", "yesterday" or "friday" if applicable; day number otherwise
+     * with_time: including time portion in response (seconds are omitted)
+     *
+     * Translations array keys:
+     * days:       ['Monday', ..., 'Sunday']
+     * months:     ['January', ..., 'December']
+     * today:      'today'
+     * yesterday:  'yesterday'
+     * prefix_rel: prefix for relative dates (like 'on' or 'at' or empty string, if not needed)
+     * prefix_abs: prefix for absolute dates (like 'on' or 'at' or empty string, if not needed)
+     * at:         'at'
+     * o'clock:    'o\'clock' (mind proper apostrophe escaping)
+     *
+     * @param   \DateTime       $date           DateTime object
+     * @param   array           $options        Options
+     * @param   array           $translations   Translations
+     * @return  string
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     * @todo    options for ordering date parts, 12h/24h handling and enumerations ("1st" versus "1.")
+     */
+    public function convertDateTimeToHuman(\DateTime $date, $options = [], $translations = []) {
+        $now    = new \DateTime();
+        $diff   = $now->getTimestamp() - $date->getTimestamp();
+        $result = array();
+
+        // Relative day, if not more than 7 days ago
+        if(in_array('relative', $options) && ($diff < 604800)) {
+            array_push($result, $translations['prefix_rel']);
+
+            // Today
+            if($date->format('d') == date('d')) {
+                array_push($result, $translations['today']);
+
+                // Yesterday
+            } elseif($date->format('d') == date('d', time() - 86400)) {
+                array_push($result, $translations['yesterday']);
+
+                // Day name
+            } else {
+                array_push($result, $translations['days'][$date->format('N') - 1]);
+            }
+        } else {
+            array_push($result, $translations['prefix_abs']);
+
+            // Day without leading zero, including enumeration point
+            array_push($result, $date->format('j.'));
+
+            // Month name
+            array_push($result, $translations['months'][$date->format('n') - 1]);
+
+            // Year, if not current
+            $year = $date->format('Y');
+            if($year != date('Y')) {
+                array_push($result, $year);
+            }
+        }
+
+        if(in_array('with_time', $options)) {
+            array_push($result, $translations['at']);
+
+            // Hour without leading zero
+            array_push($result, $date->format('G'));
+            array_push($result, $translations['o\'clock']);
+
+            // Minutes without leading zero, only if greater than zero
+            $minutes = intval($date->format('i'));
+            if($minutes > 0) {
+                array_push($result, $minutes);
+            }
+        }
+
+        $result = trim(implode(' ', $result));
+        return preg_replace('/\s+/', ' ', $result);
+    }
+
+
+    /**
      * getDateFromSeason
      *
      * Helper function to get a (start) date for a given year and season.

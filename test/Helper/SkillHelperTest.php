@@ -72,4 +72,21 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         $result = $helper->extractAmazonTime('AF', new \DateTime('2017-05-14'));
         $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
     }
+
+    public function testHumanConvertion() {
+        $helper = new SkillHelper();
+        $translations = [
+            'days'   => ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+            'months' => ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            'today'  => 'heute',
+            'yesterday'  => 'gestern',
+            'prefix_rel' => 'am',
+            'prefix_abs' => 'am',
+            'at'         => 'um',
+            'o\'clock'   => 'Uhr',
+        ];
+
+        $result = $helper->convertDateTimeToHuman(new \DateTime('2016-03-02 13:22:00'), ['with_time'], $translations);
+        $this->assertEquals('am 2. März 2016 um 13 Uhr 22', $result);
+    }
 }
