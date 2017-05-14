@@ -73,7 +73,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
     }
 
-    public function testHumanConvertion() {
+    public function testHumanConversion() {
         $helper = new SkillHelper();
         $translations = [
             'days'   => ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
