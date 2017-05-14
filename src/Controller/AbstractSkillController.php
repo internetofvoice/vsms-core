@@ -39,7 +39,10 @@ abstract class AbstractSkillController extends AbstractController
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->alexaResponse = new AlexaResponse;
-        $this->skillHelper = $this->container->get('skillHelper');
+
+        if(in_array('skillHelper', $this->settings['auto_init'])) {
+            $this->skillHelper = $this->container->get('skillHelper');
+        }
     }
 
 
@@ -60,8 +63,8 @@ abstract class AbstractSkillController extends AbstractController
         // Create AlexaRequest from request data
         $this->alexaRequest = $alexa->fromData($this->settings['validateCertificate']);
 
-        // Reset Translator as Alexa request might contain a locale
-        if($this->alexaRequest->locale) {
+        // Update auto initialized translator as Alexa request might contain a locale
+        if($this->alexaRequest->locale && in_array('translator', $this->settings['auto_init'])) {
             $this->translator->chooseLocale($this->alexaRequest->locale);
         }
     }

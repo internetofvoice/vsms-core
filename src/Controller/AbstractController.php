@@ -31,10 +31,15 @@ abstract class AbstractController
      * @author  a.schmidt@internet-of-voice.de
      */
     public function __construct(Container $container) {
-        $this->container  = $container;
-        $this->settings   = $this->container->get('settings');
-        $this->logger     = $this->container->get('logger');
-        $this->translator = $this->container->get('translator');
-        $this->translator->chooseLocale($container->request->getHeaderLine('Accept-Language'));
+        $this->container = $container;
+        $this->settings  = $this->container->get('settings');
+        if(in_array('logger', $this->settings['auto_init'])) {
+            $this->logger = $this->container->get('logger');
+        }
+
+        if(in_array('translator', $this->settings['auto_init'])) {
+            $this->translator = $this->container->get('translator');
+            $this->translator->chooseLocale($container->request->getHeaderLine('Accept-Language'));
+        }
     }
 }
