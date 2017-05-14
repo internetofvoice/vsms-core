@@ -21,7 +21,7 @@ class MockController extends AbstractController
      * @author	a.schmidt@internet-of-voice.de
      */
     public function getLanguage($request, $response) {
-        $response->getBody()->write($this->i18n->getLanguage());
+        $response->getBody()->write($this->translator->getLanguage());
         return $response;
     }
 
@@ -35,7 +35,7 @@ class MockController extends AbstractController
      * @author	a.schmidt@internet-of-voice.de
      */
     public function getLocale($request, $response) {
-        $response->getBody()->write($this->i18n->getLocale());
+        $response->getBody()->write($this->translator->getLocale());
         return $response;
     }
 }

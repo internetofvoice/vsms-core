@@ -25,8 +25,8 @@ abstract class AbstractSkillController extends AbstractController
     /** @var array $askApplicationIds */
     protected $askApplicationIds;
 
-    /** @var \InternetOfVoice\VSMS\Core\Helper\skillHelper $helper */
-    protected $helper;
+    /** @var \InternetOfVoice\VSMS\Core\Helper\skillHelper $skillHelper */
+    protected $skillHelper;
 
 
     /**
@@ -39,7 +39,7 @@ abstract class AbstractSkillController extends AbstractController
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->alexaResponse = new AlexaResponse;
-        $this->helper = $this->container->get('helper');
+        $this->skillHelper = $this->container->get('skillHelper');
     }
 
 
@@ -60,9 +60,9 @@ abstract class AbstractSkillController extends AbstractController
         // Create AlexaRequest from request data
         $this->alexaRequest = $alexa->fromData($this->settings['validateCertificate']);
 
-        // Reset i18n as Alexa request might contain a locale
+        // Reset Translator as Alexa request might contain a locale
         if($this->alexaRequest->locale) {
-            $this->i18n->chooseLocale($this->alexaRequest->locale);
+            $this->translator->chooseLocale($this->alexaRequest->locale);
         }
     }
 

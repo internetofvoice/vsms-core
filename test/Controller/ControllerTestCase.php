@@ -75,7 +75,8 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
         $app = new App($settings);
         $container = $app->getContainer();
         $container['request'] = $request;
-        $container['i18n'] = function(Container $c) {
+
+        $container['translator'] = function(Container $c) {
             $settings = $c->get('settings');
             return new TranslationHelper(
                 $settings['locales'],
@@ -83,13 +84,13 @@ class ControllerTestCase extends \PHPUnit_Framework_TestCase
             );
         };
 
-        $container['logger'] = function(Container $c) {
+        $container['logger'] = function() {
             $logger = new LogHelper();
             $logger->handler(Ignore::init());
             return $logger;
         };
 
-        $container['helper'] = function(Container $c) {
+        $container['skillHelper'] = function() {
             return new SkillHelper();
         };
 

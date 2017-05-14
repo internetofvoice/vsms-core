@@ -20,8 +20,8 @@ abstract class AbstractController
     /** @var \InternetOfVoice\VSMS\Core\Helper\LogHelper $logger */
     protected $logger;
 
-    /** @var \InternetOfVoice\VSMS\Core\Helper\TranslationHelper $i18n */
-    protected $i18n;
+    /** @var \InternetOfVoice\VSMS\Core\Helper\TranslationHelper $translator */
+    protected $translator;
 
     /**
      * Constructor
@@ -31,11 +31,10 @@ abstract class AbstractController
      * @author  a.schmidt@internet-of-voice.de
      */
     public function __construct(Container $container) {
-        $this->container = $container;
-        $this->settings  = $this->container->get('settings');
-        $this->logger    = $this->container->get('logger');
-        $this->i18n      = $this->container->get('i18n');
-
-        $this->i18n->chooseLocale($container->request->getHeaderLine('Accept-Language'));
+        $this->container  = $container;
+        $this->settings   = $this->container->get('settings');
+        $this->logger     = $this->container->get('logger');
+        $this->translator = $this->container->get('translator');
+        $this->translator->chooseLocale($container->request->getHeaderLine('Accept-Language'));
     }
 }
