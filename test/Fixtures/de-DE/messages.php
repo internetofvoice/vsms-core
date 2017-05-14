@@ -8,4 +8,9 @@
 
 return [
     "I am afraid I did not understand you." => "Ich habe Sie leider nicht verstanden.",
+
+    'array' => [
+        'key1' => 'value1',
+        'key2' => 'value2',
+    ],
 ];
