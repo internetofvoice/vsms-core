@@ -107,11 +107,18 @@ class SkillHelper
         }
 
         if($date_back && in_array($origin, ['date', 'month', 'season'])) {
-            $now = new \DateTime();
-            if($start > $now) {
-                // Need to date back by request for some origins - subtract one year, as origin was either:
-                // a date like 1st of May, a month like May or a season like Fall - all refer to an ambiguous year.
-                $start->sub(new \DateInterval('P1Y'));
+            $now  = new \DateTime();
+            $diff = $now->getTimestamp() - $start->getTimestamp();
+            if($diff < 0) {
+                // Need to date back as requested with $date_back for some origins.
+                if($diff > -604800) {
+                    // If difference is less than seven days and origin is date, most likely a day name was given.
+                    $start->sub(new \DateInterval('P7D'));
+                } else {
+                    // In all other cases, subtract a year (for dates like "3rd of November", months like "August"
+                    // and seasons like "Winter"
+                    $start->sub(new \DateInterval('P1Y'));
+                }
             }
         }
 
