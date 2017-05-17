@@ -2,6 +2,8 @@
 
 namespace Tests\InternetOfVoice\VSMS\Core\Helper;
 
+use Analog\Handler\LevelName;
+use Analog\Handler\Variable;
 use InternetOfVoice\VSMS\Core\Helper\LogHelper;
 use Tests\InternetOfVoice\VSMS\Core\Controller\ControllerTestCase;
 
@@ -19,7 +21,7 @@ class LogHelperTest extends ControllerTestCase
         $log    = '';
         $logger = new LogHelper;
         $logger->format('%s - %s - %s - %s' . PHP_EOL);
-        $logger->handler(\Analog\Handler\LevelName::init(\Analog\Handler\Variable::init($log)));
+        $logger->handler(LevelName::init(Variable::init($log)));
 
         $logger->info('A test log entry.');
         $this->assertContains('INFO', $log);
@@ -31,7 +33,7 @@ class LogHelperTest extends ControllerTestCase
         $log     = '';
         $logger  = new LogHelper;
         $logger->format('%s - %s - %s - %s' . PHP_EOL);
-        $logger->handler(\Analog\Handler\LevelName::init(\Analog\Handler\Variable::init($log)));
+        $logger->handler(LevelName::init(Variable::init($log)));
         $logger->setMask(['key']);
         $logger->logRequest($request, ['extra-key' => 'extra-value']);
 

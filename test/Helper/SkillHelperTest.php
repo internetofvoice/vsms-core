@@ -61,7 +61,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2017-03-20 23:59:59', $end->format('Y-m-d H:i:s'));
 
         // Backdating of future month
-        list($start, $end) = $helper->extractAmazonDate((date('Y') + 1) . '-' . date('m'), true);
+        list($start) = $helper->extractAmazonDate((date('Y') + 1) . '-' . date('m'), true);
         $this->assertEquals(date('Y'), $start->format('Y'));
 
         // Fail on unknown formats
