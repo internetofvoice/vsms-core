@@ -12,14 +12,11 @@ class SkillHelper
     /**
      * extractAmazonDate
      *
-     * Extracts an AMAZON.DATE slot value to a DateTime and a DateInterval object.
-     * Returns a StdClass object with properties 'start' (DateTime object) and 'duration' (DateInterval object).
-     * If given date matches no meaningful date, both properties will be returned as boolean false.
-     * Duration will be false, if date refers to now.
-     *
-     * If a time span is given (like 2017), start will be 2017-01-01 00:00:00, and duration an interval of one year.
-     *
-     * For a specific date (like 2017-05-10), start will be 2017-05-10 00:00:00, and duration an interval of one day.
+     * Extracts an AMAZON.DATE slot value to two DateTime objects 'start' and 'end', returned as [start, end]
+     * If given date matches no date, both will be false. If it refers to "now", both will be the same DateTime.
+     * In all other cases, start and end describe a time span corresponding to given date, e.g.
+     * 2017-01-01 -> [2017-01-01 00:00:00, 2017-01-01 23:59:59]
+     * 2017-05    -> [2017-05-01 00:00:00, 2017-05-31 23:59:59]
      *
      * Unspecific dates like "May" are always sent as future dates (next May) by Amazon.
      * You may use the optional $date_back parameter to enforce past dates (last May).
@@ -28,22 +25,22 @@ class SkillHelper
      *
      * @param   string      $amazon_date        AMAZON.DATE slot value
      * @param   bool        $date_back          Enforce a date in the past?
-     * @return  \StdClass
+     * @return  \DateTime[]
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
      * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#date
      */
     public function extractAmazonDate($amazon_date, $date_back = false) {
         $start    = false;
-        $duration = false;
+        $end = false;
         $origin   = false;
 
         switch(true) {
             // Now
             case ($amazon_date == 'PRESENT_REF'):
-                $origin   = 'now';
-                $start    = new \DateTime();
-                $duration = false;
+                $origin = 'now';
+                $start  = new \DateTime();
+                $end    = clone $start;
             break;
 
             // Date
@@ -51,7 +48,8 @@ class SkillHelper
                 $origin = 'date';
                 $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date);
                 $start->setTime(0, 0, 0);
-                $duration = new \DateInterval('P1D');
+                $end = clone $start;
+                $end->setTime(23, 59, 59);
             break;
 
             // Week
@@ -60,7 +58,8 @@ class SkillHelper
                 $start  = new \DateTime();
                 $start->setTime(0, 0, 0);
                 $start->setISODate(intval($matches[1]), intval($matches[2]));
-                $duration = new \DateInterval('P1W');
+                $end = clone $start;
+                $end->add(new \DateInterval('P1W'))->sub(new \DateInterval('PT1S'));
             break;
 
             // Weekend
@@ -69,8 +68,9 @@ class SkillHelper
                 $start  = new \DateTime();
                 $start->setTime(0, 0, 0);
                 $start->setISODate(intval($matches[1]), intval($matches[2]));
-                $start->modify('+5 days');
-                $duration = new \DateInterval('P2D');
+                $start->add(new \DateInterval('P5D'));
+                $end = clone $start;
+                $end->add(new \DateInterval('P2D'))->sub(new \DateInterval('PT1S'));
             break;
 
             // Month
@@ -78,7 +78,8 @@ class SkillHelper
                 $origin = 'month';
                 $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01');
                 $start->setTime(0, 0, 0);
-                $duration = new \DateInterval('P1M');
+                $end = clone $start;
+                $end->add(new \DateInterval('P1M'))->sub(new \DateInterval('PT1S'));
             break;
 
             // Year
@@ -86,7 +87,8 @@ class SkillHelper
                 $origin = 'year';
                 $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01-01');
                 $start->setTime(0, 0, 0);
-                $duration = new \DateInterval('P1Y');
+                $end = clone $start;
+                $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
             break;
 
             // Decade
@@ -94,15 +96,17 @@ class SkillHelper
                 $origin = 'decade';
                 $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '0-01-01');
                 $start->setTime(0, 0, 0);
-                $duration = new \DateInterval('P10Y');
+                $end = clone $start;
+                $end->add(new \DateInterval('P10Y'))->sub(new \DateInterval('PT1S'));
             break;
 
             // Season
             case preg_match('~^([\d]{4})-(SP|SU|FA|WI)$~', $amazon_date, $matches):
-                $seasons  = ['SP' => 'spring', 'SU' => 'summer', 'FA' => 'fall', 'WI' => 'winter'];
-                $origin   = 'season';
-                $start    = $this->getDateFromSeason(intval($matches[1]), $seasons[$matches[2]], 'northern', false);
-                $duration = new \DateInterval('P3M');
+                $seasons = ['SP' => 'spring', 'SU' => 'summer', 'FA' => 'fall', 'WI' => 'winter'];
+                $origin  = 'season';
+                $start   = $this->getDateFromSeason(intval($matches[1]), $seasons[$matches[2]], 'northern', false);
+                $end = clone $start;
+                $end->add(new \DateInterval('P3M'))->sub(new \DateInterval('PT1S'));
             break;
         }
 
@@ -114,15 +118,17 @@ class SkillHelper
                 if($diff > -604800) {
                     // If difference is less than seven days and origin is date, most likely a day name was given.
                     $start->sub(new \DateInterval('P7D'));
+                    $end->sub(new \DateInterval('P7D'));
                 } else {
                     // In all other cases, subtract a year (for dates like "3rd of November", months like "August"
-                    // and seasons like "Winter"
+                    // and seasons like "Winter")
                     $start->sub(new \DateInterval('P1Y'));
+                    $end->sub(new \DateInterval('P1Y'));
                 }
             }
         }
 
-        return (object)['start' => $start, 'duration' => $duration];
+        return [$start, $end];
     }
 
     /**
