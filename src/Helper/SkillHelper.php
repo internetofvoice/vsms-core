@@ -10,6 +10,101 @@ namespace InternetOfVoice\VSMS\Core\Helper;
 class SkillHelper
 {
     /**
+     * getDateFromSeason
+     *
+     * Helper function to get a (start) date for a given year and season.
+     *
+     * Dates are not always accurate for northern and southern hemispheres, as
+     * solstices/equinoxes may vary by -1/+1 day.
+     *
+     * Seasons spanning two years (winter in northern and summer in southern
+     * hemisphere) might point to either current or last year. Current year
+     * is enforced by parameter $force_year, else the seasons point to last year.
+     *
+     * Based on code by http://biostall.com/get-the-current-season-using-php/
+     *
+     * @param   int             $year                   Year
+     * @param   string          $season                 Season {spring, summer, fall, winter}
+     * @param   string          $hemisphere             Hemisphere {northern, southern, australia}
+     * @param   bool            $force_year             Enforce given year?
+     * @return  false|\DateTime
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
+     */
+    public function getDateFromSeason($year, $season, $hemisphere, $force_year = true) {
+        $date   = false;
+        $offset = $force_year ? 0 : 1;
+
+        switch($hemisphere) {
+            case 'northern':
+                switch($season) {
+                    case 'spring':
+                        $date = new \DateTime($year . '-03-21');
+                    break;
+
+                    case 'summer':
+                        $date = new \DateTime($year . '-06-21');
+                    break;
+
+                    case 'fall':
+                        $date = new \DateTime($year . '-09-23');
+                    break;
+
+                    case 'winter':
+                        $date = new \DateTime(($year - $offset) . '-12-21');
+                    break;
+                }
+            break;
+
+            case 'southern':
+                switch($season) {
+                    case 'fall':
+                        $date = new \DateTime($year . '-03-21');
+                    break;
+
+                    case 'winter':
+                        $date = new \DateTime($year . '-06-21');
+                    break;
+
+                    case 'spring':
+                        $date = new \DateTime($year . '-09-23');
+                    break;
+
+                    case 'summer':
+                        $date = new \DateTime(($year - $offset) . '-12-21');
+                    break;
+                }
+            break;
+
+            case 'australia':
+                switch($season) {
+                    case 'fall':
+                        $date = new \DateTime($year . '-03-01');
+                    break;
+
+                    case 'winter':
+                        $date = new \DateTime($year . '-06-01');
+                    break;
+
+                    case 'spring':
+                        $date = new \DateTime($year . '-09-01');
+                    break;
+
+                    case 'summer':
+                        $date = new \DateTime(($year - $offset) . '-12-01');
+                    break;
+                }
+            break;
+        }
+
+        if($date instanceof \DateTime) {
+            $date->setTime(0, 0, 0);
+        }
+
+        return $date;
+    }
+
+    /**
      * extractAmazonDate
      *
      * Extracts an AMAZON.DATE slot value to two DateTime objects 'start' and 'end', returned as [start, end]
@@ -267,98 +362,23 @@ class SkillHelper
         return preg_replace('/\s+/', ' ', $result);
     }
 
-
     /**
-     * getDateFromSeason
+     * Converts a list to a comma separated string and using a conjunction word before the last element
+     * Example: [one, two, three] -> one, two and three
      *
-     * Helper function to get a (start) date for a given year and season.
-     *
-     * Dates are not always accurate for northern and southern hemispheres, as
-     * solstices/equinoxes may vary by -1/+1 day.
-     *
-     * Seasons spanning two years (winter in northern and summer in southern
-     * hemisphere) might point to either current or last year. Current year
-     * is enforced by parameter $force_year, else the seasons point to last year.
-     *
-     * Based on code by http://biostall.com/get-the-current-season-using-php/
-     *
-     * @param   int             $year                   Year
-     * @param   string          $season                 Season {spring, summer, fall, winter}
-     * @param   string          $hemisphere             Hemisphere {northern, southern, australia}
-     * @param   bool            $force_year             Enforce given year?
-     * @return  false|\DateTime
-
+     * @param   array       $list
+     * @param   string      $conjunction
+     * @return  string
+     * @access  public
+     * @author  a.schmidt@internet-of-voice.de
      */
-    protected function getDateFromSeason($year, $season, $hemisphere, $force_year = true) {
-        $date   = false;
-        $offset = $force_year ? 0 : 1;
-
-        switch($hemisphere) {
-            case 'northern':
-                switch($season) {
-                    case 'spring':
-                        $date = new \DateTime($year . '-03-21');
-                    break;
-
-                    case 'summer':
-                        $date = new \DateTime($year . '-06-21');
-                    break;
-
-                    case 'fall':
-                        $date = new \DateTime($year . '-09-23');
-                    break;
-
-                    case 'winter':
-                        $date = new \DateTime(($year - $offset) . '-12-21');
-                    break;
-                }
-            break;
-
-            case 'southern':
-                switch($season) {
-                    case 'fall':
-                        $date = new \DateTime($year . '-03-21');
-                    break;
-
-                    case 'winter':
-                        $date = new \DateTime($year . '-06-21');
-                    break;
-
-                    case 'spring':
-                        $date = new \DateTime($year . '-09-23');
-                    break;
-
-                    case 'summer':
-                        $date = new \DateTime(($year - $offset) . '-12-21');
-                    break;
-                }
-            break;
-
-            case 'australia':
-                switch($season) {
-                    case 'fall':
-                        $date = new \DateTime($year . '-03-01');
-                    break;
-
-                    case 'winter':
-                        $date = new \DateTime($year . '-06-01');
-                    break;
-
-                    case 'spring':
-                        $date = new \DateTime($year . '-09-01');
-                    break;
-
-                    case 'summer':
-                        $date = new \DateTime(($year - $offset) . '-12-01');
-                    break;
-                }
-            break;
+    public function convertListToHuman($list, $conjunction = 'and') {
+        if(count($list) > 1) {
+            $last1 = array_pop($list);
+            $last2 = count($list) - 1;
+            $list[$last2] = $list[$last2] . ' ' . $conjunction . ' ' . $last1;
         }
 
-        if($date instanceof \DateTime) {
-            $date->setTime(0, 0, 0);
-        }
-
-        return $date;
+        return implode(', ', $list);
     }
 }

@@ -12,7 +12,15 @@ use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
 
 class SkillHelperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAmazonDate() {
+    public function testGetDateFromSeason() {
+        $helper = new SkillHelper();
+        $result = $helper->getDateFromSeason(2017, 'spring', 'northern');
+        $this->assertEquals('2017-03-21', $result->format('Y-m-d'));
+        $result = $helper->getDateFromSeason(2016, 'fall', 'southern');
+        $this->assertEquals('2016-03-21', $result->format('Y-m-d'));
+    }
+
+    public function testExtractAmazonDate() {
         $helper = new SkillHelper();
 
         // Now
@@ -70,7 +78,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $end);
     }
 
-    public function testAmazonTime() {
+    public function testExtractAmazonTime() {
         $helper = new SkillHelper();
         $result = $helper->extractAmazonTime('16:17', new \DateTime('2017-05-14'));
         $this->assertEquals('2017-05-14 16:17:00', $result->format('Y-m-d H:i:s'));
@@ -78,7 +86,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
     }
 
-    public function testHumanConversion() {
+    public function testConvertDateTimeToHuman() {
         $helper = new SkillHelper();
         $translations = [
             'days'   => ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
@@ -93,5 +101,11 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
 
         $result = $helper->convertDateTimeToHuman(new \DateTime('2016-03-02 13:22:00'), ['with_time'], $translations);
         $this->assertEquals('am 2. März 2016 um 13 Uhr 22', $result);
+    }
+
+    public function testConvertListToHuman() {
+        $helper = new SkillHelper();
+        $result = $helper->convertListToHuman(['one', 'two', 'three'], 'or');
+        $this->assertEquals('one, two or three', $result);
     }
 }
