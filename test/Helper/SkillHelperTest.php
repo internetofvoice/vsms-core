@@ -52,6 +52,9 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         list($start, $end) = $helper->extractAmazonDate('2016');
         $this->assertEquals('2016-01-01 00:00:00', $start->format('Y-m-d H:i:s'));
         $this->assertEquals('2016-12-31 23:59:59', $end->format('Y-m-d H:i:s'));
+        list($start, $end) = $helper->extractAmazonDate('2016-XX-XX');
+        $this->assertEquals('2016-01-01 00:00:00', $start->format('Y-m-d H:i:s'));
+        $this->assertEquals('2016-12-31 23:59:59', $end->format('Y-m-d H:i:s'));
 
         // Decade
         list($start, $end) = $helper->extractAmazonDate('199X');

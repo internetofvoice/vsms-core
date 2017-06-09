@@ -186,6 +186,14 @@ class SkillHelper
                 $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
             break;
 
+            case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
+                $origin = 'year';
+                $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
+                $start->setTime(0, 0, 0);
+                $end = clone $start;
+                $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
+            break;
+
             // Decade
             case preg_match('~^([\d]{3})X$~', $amazon_date, $matches):
                 $origin = 'decade';
