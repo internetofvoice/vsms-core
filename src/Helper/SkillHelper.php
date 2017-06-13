@@ -275,10 +275,6 @@ class SkillHelper
             case ($amazon_time == 'EV'):
                 $date->setTime(18, 0, 0);
             break;
-
-            default:
-                $date = false;
-            break;
         }
 
         return $date;
