@@ -59,7 +59,7 @@ class TranslationHelper
 
         $matched_locales = array();
         foreach($matches as $match) {
-            $temp  = explode('-', $match[1]) + array('', '');
+            $temp  = explode('-', $match[1]);
             $lang  = array_shift($temp);
             $value = isset($match[2]) ? (float)$match[2] : 1.0;
 

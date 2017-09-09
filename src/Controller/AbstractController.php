@@ -33,6 +33,7 @@ abstract class AbstractController
     public function __construct(Container $container) {
         $this->container = $container;
         $this->settings  = $this->container->get('settings');
+
         if(in_array('logger', $this->settings['auto_init'])) {
             $this->logger = $this->container->get('logger');
         }

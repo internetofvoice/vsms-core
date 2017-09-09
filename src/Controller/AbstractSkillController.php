@@ -75,8 +75,9 @@ abstract class AbstractSkillController extends AbstractController
      * Dispatches Alexa Request to either:
      * - launch()
      * - sessionEnded()
-     * - a method derived from intent name by removing non-word chars and prefixing with "intent", example:
+     * - a method derived from intent name by removing non-word chars and prefixing with "intent", examples:
      *   "AMAZON.HelpIntent" -> "intentAMAZONHelpIntent()"
+     *   "MyIntent" -> "intentMyIntent()"
      *
      * @param   \Slim\Http\Response     $response   Slim response
      * @return  \Slim\Http\Response

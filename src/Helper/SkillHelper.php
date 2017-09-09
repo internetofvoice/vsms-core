@@ -126,9 +126,9 @@ class SkillHelper
      * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#date
      */
     public function extractAmazonDate($amazon_date, $date_back = false) {
-        $start    = false;
-        $end = false;
-        $origin   = false;
+		$start  = false;
+		$end    = false;
+		$origin = false;
 
         switch(true) {
             // Now

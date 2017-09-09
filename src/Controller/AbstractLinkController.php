@@ -66,10 +66,10 @@ abstract class AbstractLinkController extends AbstractController
      * @author	a.schmidt@internet-of-voice.de
      */
     public function getRedirectLocation($parameters, $access_token) {
-        $location   = array();
-        $location[] = $parameters['redirect_uri'] . '#state=' . $parameters['state'];
-        $location[] = 'access_token=' . $access_token;
-        $location[] = 'token_type=Bearer';
+        $location = array();
+        array_push($location, $parameters['redirect_uri'] . '#state=' . $parameters['state']);
+        array_push($location, 'access_token=' . $access_token);
+        array_push($location, 'token_type=Bearer');
 
         return implode('&', $location);
     }
