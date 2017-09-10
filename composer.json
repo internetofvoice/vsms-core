@@ -27,13 +27,13 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/anschluss80/amazon-alexa-php"
+            "url": "https://github.com/internetofvoice/amazon-alexa-php"
         }
     ],
     "require": {
         "php": ">=5.5.0",
         "slim/slim": "^3.8",
-        "jakubsuchy/amazon-alexa-php": "dev-master",
+        "internetofvoice/amazon-alexa-php": "dev-master",
         "analog/analog": "dev-master"
     },
     "require-dev": {
