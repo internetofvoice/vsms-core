@@ -2,12 +2,14 @@
 
 namespace InternetOfVoice\VSMS\Core\Helper;
 
+use Analog\Logger;
+
 /**
  * LogHelper
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  */
-class LogHelper extends \Analog\Logger
+class LogHelper extends Logger
 {
     /** @var array $mask */
     protected $mask = [];

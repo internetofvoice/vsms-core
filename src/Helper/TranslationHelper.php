@@ -59,7 +59,7 @@ class TranslationHelper
 
         $matched_locales = array();
         foreach($matches as $match) {
-            $temp  = explode('-', $match[1]) + array('', '');
+            $temp  = explode('-', $match[1]);
             $lang  = array_shift($temp);
             $value = isset($match[2]) ? (float)$match[2] : 1.0;
 
@@ -129,6 +129,17 @@ class TranslationHelper
         return vsprintf($this->messages[$message], $args);
     }
 
+    /**
+     * Get translation array (no content substitution)
+     *
+     * @param   string      $message
+     * @return  mixed
+     * @access	public
+     * @author	a.schmidt@anschluss80.de
+     */
+    public function a($message) {
+        return isset($this->messages[$message]) ? $this->messages[$message] : $message;
+    }
 
     /**
      * Get locale

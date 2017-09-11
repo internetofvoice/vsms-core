@@ -23,5 +23,8 @@ class TranslationHelperTest extends \PHPUnit_Framework_TestCase
 
         $helper->addTranslation(__DIR__ . '/../Fixtures', 'messages');
         $this->assertEquals('Ich habe Sie leider nicht verstanden.', $helper->t('I am afraid I did not understand you.'));
+
+        $this->assertEquals('NON_EXISTENT_WORD_COMBINATION', $helper->a('NON_EXISTENT_WORD_COMBINATION'));
+        $this->assertArrayHasKey('key1', $helper->a('array'));
     }
 }

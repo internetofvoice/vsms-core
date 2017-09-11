@@ -13,6 +13,8 @@ return [
         'validateCertificate'       => false,
         'environment'               => 'dev-test',
 
+        'auto_init'                 => ['logger', 'translator', 'skillHelper'],
+
         'locale_default'            => 'en-US',
         'locales'                   => ['de-DE', 'en-US', 'en-GB'],
     ]

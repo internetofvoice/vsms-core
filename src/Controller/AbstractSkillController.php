@@ -25,8 +25,8 @@ abstract class AbstractSkillController extends AbstractController
     /** @var array $askApplicationIds */
     protected $askApplicationIds;
 
-    /** @var \InternetOfVoice\VSMS\Core\Helper\skillHelper $helper */
-    protected $helper;
+    /** @var \InternetOfVoice\VSMS\Core\Helper\skillHelper $skillHelper */
+    protected $skillHelper;
 
 
     /**
@@ -39,7 +39,10 @@ abstract class AbstractSkillController extends AbstractController
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->alexaResponse = new AlexaResponse;
-        $this->helper = $this->container->get('helper');
+
+        if(in_array('skillHelper', $this->settings['auto_init'])) {
+            $this->skillHelper = $this->container->get('skillHelper');
+        }
     }
 
 
@@ -60,9 +63,9 @@ abstract class AbstractSkillController extends AbstractController
         // Create AlexaRequest from request data
         $this->alexaRequest = $alexa->fromData($this->settings['validateCertificate']);
 
-        // Reset i18n as Alexa request might contain a locale
-        if($this->alexaRequest->locale) {
-            $this->i18n->chooseLocale($this->alexaRequest->locale);
+        // Update auto initialized translator as Alexa request might contain a locale
+        if($this->alexaRequest->locale && in_array('translator', $this->settings['auto_init'])) {
+            $this->translator->chooseLocale($this->alexaRequest->locale);
         }
     }
 
@@ -72,8 +75,9 @@ abstract class AbstractSkillController extends AbstractController
      * Dispatches Alexa Request to either:
      * - launch()
      * - sessionEnded()
-     * - a method derived from intent name by removing non-word chars and prefixing with "intent", example:
+     * - a method derived from intent name by removing non-word chars and prefixing with "intent", examples:
      *   "AMAZON.HelpIntent" -> "intentAMAZONHelpIntent()"
+     *   "MyIntent" -> "intentMyIntent()"
      *
      * @param   \Slim\Http\Response     $response   Slim response
      * @return  \Slim\Http\Response

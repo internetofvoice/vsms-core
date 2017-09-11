@@ -2,6 +2,6 @@
 
 Changes to this library are documented in reverse chronological order.
 
-## 1.0.0 (2017-04-14) 
+## 1.0.0 (2017-09-11) 
 
 Initial release.
