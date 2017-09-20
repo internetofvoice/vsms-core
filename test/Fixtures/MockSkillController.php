@@ -49,10 +49,12 @@ final class MockSkillController extends AbstractSkillController
 		try {
 			$this->createAlexaRequest($request);
 
-			return $this->dispatchAlexaRequest($response);
+			$reply = $this->dispatchAlexaRequest($response);
 		} catch(\Exception $e) {
 			return $response->withJson(['error' => 'Bad Request'], 400);
 		}
+
+		return $reply;
     }
 
 
