@@ -46,9 +46,13 @@ final class MockSkillController extends AbstractSkillController
      * @see     routing configuration
      */
     public function __invoke($request, $response, $args) {
-        $this->createAlexaRequest($request);
+		try {
+			$this->createAlexaRequest($request);
 
-        return $this->dispatchAlexaRequest($response);
+			return $this->dispatchAlexaRequest($response);
+		} catch(\Exception $e) {
+			return $response->withJson(['error' => 'Bad Request'], 400);
+		}
     }
 
 
