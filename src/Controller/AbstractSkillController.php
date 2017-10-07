@@ -2,11 +2,8 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
-use Alexa\Request\IntentRequest as AlexaIntentRequest;
-use Alexa\Request\LaunchRequest as AlexaLaunchRequest;
-use Alexa\Request\Request as AlexaRequest;
-use Alexa\Request\SessionEndedRequest as AlexaSessionEndedRequest;
-use Alexa\Response\Response as AlexaResponse;
+use InternetOfVoice\LibVoice\Alexa\Request\AlexaRequest;
+use InternetOfVoice\LibVoice\Alexa\Response\AlexaResponse;
 use InvalidArgumentException;
 use Slim\Container;
 
@@ -17,9 +14,10 @@ use Slim\Container;
  */
 abstract class AbstractSkillController extends AbstractController
 {
+	/** @var AlexaRequest */
     protected $alexaRequest;
 
-    /** @var \Alexa\Response\Response $alexaResponse */
+    /** @var AlexaResponse $alexaResponse */
     protected $alexaResponse;
 
     /** @var array $askApplicationIds */
@@ -54,18 +52,18 @@ abstract class AbstractSkillController extends AbstractController
      * @author  a.schmidt@internet-of-voice.de
      */
     protected function createAlexaRequest($request) {
-        // Instantiate AlexaRequest from request object
-        $alexa = new AlexaRequest(
+        // Create AlexaRequest from HTTP request
+        $this->alexaRequest = new AlexaRequest(
             $request->getBody()->getContents(),
-            $this->askApplicationIds[$this->settings['environment']]
+            $this->askApplicationIds,
+	        $request->getHeaderLine('Signaturecertchainurl'),
+	        $request->getHeaderLine('Signature'),
+	        $this->settings['validateCertificate']
         );
 
-        // Create AlexaRequest from request data
-        $this->alexaRequest = $alexa->fromData($this->settings['validateCertificate']);
-
         // Update auto initialized translator as Alexa request might contain a locale
-        if($this->alexaRequest->locale && in_array('translator', $this->settings['auto_init'])) {
-            $this->translator->chooseLocale($this->alexaRequest->locale);
+        if($this->alexaRequest->getRequest()->getLocale() && in_array('translator', $this->settings['auto_init'])) {
+            $this->translator->chooseLocale($this->alexaRequest->getRequest()->getLocale());
         }
     }
 
@@ -86,14 +84,17 @@ abstract class AbstractSkillController extends AbstractController
      * @author  a.schmidt@internet-of-voice.de
      */
     protected function dispatchAlexaRequest($response) {
-        switch(true) {
-            case $this->alexaRequest instanceof AlexaLaunchRequest:
+        switch($this->alexaRequest->getRequest()->getType()) {
+            case 'LaunchRequest':
                 $this->launch();
             break;
 
-            case $this->alexaRequest instanceof AlexaIntentRequest:
+	        case 'IntentRequest':
+	        	/** @var \InternetOfVoice\LibVoice\Alexa\Request\Request\IntentRequest $intentRequest */
+	        	$intentRequest = $this->alexaRequest->getRequest();
+
                 // derive handler method name from intent name
-                $method = 'intent' . preg_replace('#\W#', '', $this->alexaRequest->intentName);
+                $method = 'intent' . preg_replace('#\W#', '', $intentRequest->getIntent()->getName());
 
                 if(method_exists($this, $method)) {
                     call_user_func(array($this, $method));
@@ -102,7 +103,7 @@ abstract class AbstractSkillController extends AbstractController
                 }
             break;
 
-            case $this->alexaRequest instanceof AlexaSessionEndedRequest:
+	        case 'SessionEndedRequest':
                 $this->sessionEnded();
             break;
 

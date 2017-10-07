@@ -13,7 +13,7 @@ final class MockSkillController extends AbstractSkillController
 {
     /** @var array $askApplicationIds */
     protected $askApplicationIds = [
-        'dev-test' => 'amzn1.ask.skill.b5ec8cfa-d9e5-40c9-8325-c56927a2e42b',
+        'dev-test' => 'amzn1.ask.skill.ef9d2df5-6c65-47b5-9f74-3e6a064c45e6',
     ];
 
     /** @var array $messages */
@@ -51,7 +51,8 @@ final class MockSkillController extends AbstractSkillController
 
 			$reply = $this->dispatchAlexaRequest($response);
 		} catch(\Exception $e) {
-			return $response->withJson(['error' => 'Bad Request'], 400);
+			return $response->withJson(['error' => $e->getMessage()]);
+			// return $response->withJson(['error' => 'Bad Request'], 400);
 		}
 
 		return $reply;
