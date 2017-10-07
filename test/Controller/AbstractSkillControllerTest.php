@@ -33,28 +33,27 @@ class AbstractSkillControllerTest extends ControllerTestCase
         return $app->process($request, new Response());
     }
 
-//    /**
-//     * testLaunchRequest
-//     */
-//    public function testLaunchRequest() {
-//        $fixture  = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest.json'), true);
-//        $header   = $fixture['header'];
-//        $body     = json_encode($fixture['body-launch']);
-//        $response = $this->runApp('POST', '/skill/test', $header, $body);
-//        $this->assertEquals(200, $response->getStatusCode());
-//        $this->assertContains('"outputSpeech"', strval($response->getBody()));
-//
-//        $json_body = json_decode(strval($response->getBody()), true);
-//        $this->assertArrayHasKey('response', $json_body);
-//        $this->assertArrayHasKey('outputSpeech', $json_body['response']);
-//        $this->assertArrayHasKey('text', $json_body['response']['outputSpeech']);
-//        $this->assertEquals('Welcome to Test Skill.', $json_body['response']['outputSpeech']['text']);
-//
-//        $this->assertArrayHasKey('reprompt', $json_body['response']);
-//        $this->assertArrayHasKey('outputSpeech', $json_body['response']['reprompt']);
-//        $this->assertArrayHasKey('text', $json_body['response']['reprompt']['outputSpeech']);
-//        $this->assertEquals('If you need help, please say help.', $json_body['response']['reprompt']['outputSpeech']['text']);
-//    }
+    /**
+     * testLaunchRequest
+     */
+    public function testLaunchRequest() {
+	    $body     = file_get_contents(__DIR__ . '/../Fixtures/TestLaunchRequest-Body.txt');
+	    $header   = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestLaunchRequest-Header.json'), true);
+        $response = $this->runApp('POST', '/skill/test', $header, $body);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertContains('"outputSpeech"', strval($response->getBody()));
+
+        $json_body = json_decode(strval($response->getBody()), true);
+        $this->assertArrayHasKey('response', $json_body);
+        $this->assertArrayHasKey('outputSpeech', $json_body['response']);
+        $this->assertArrayHasKey('text', $json_body['response']['outputSpeech']);
+        $this->assertEquals('Welcome to Test Skill.', $json_body['response']['outputSpeech']['text']);
+
+        $this->assertArrayHasKey('reprompt', $json_body['response']);
+        $this->assertArrayHasKey('outputSpeech', $json_body['response']['reprompt']);
+        $this->assertArrayHasKey('text', $json_body['response']['reprompt']['outputSpeech']);
+        $this->assertEquals('If you need help, please say help.', $json_body['response']['reprompt']['outputSpeech']['text']);
+    }
 
     /**
      * testHelpIntent
