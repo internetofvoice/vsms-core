@@ -2,14 +2,15 @@
 
 namespace InternetOfVoice\VSMS\Core\Service;
 
-use \InternetOfVoice\VSMS\Core\Helper\LogHelper;
-use \InternetOfVoice\VSMS\Core\Helper\SkillHelper;
-use \InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
+use InternetOfVoice\VSMS\Core\Helper\LogHelper;
+use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
+use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
 
 /**
- * AbstractService
+ * Class AbstractService
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
 abstract class AbstractService
 {

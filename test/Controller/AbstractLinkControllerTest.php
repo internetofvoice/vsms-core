@@ -6,12 +6,12 @@ use Slim\Http\Response;
 use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockLinkController;
 
 /**
- * AbstractLinkControllerTest
+ * Class AbstractLinkControllerTest
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class AbstractLinkControllerTest extends ControllerTestCase
-{
+class AbstractLinkControllerTest extends ControllerTestCase {
     /**
      * Run application
      *
@@ -52,5 +52,8 @@ class AbstractLinkControllerTest extends ControllerTestCase
 
         $response = $this->runApp('GET', '/non-existent');
         $this->assertEquals(404, $response->getStatusCode());
-    }
+
+	    $response = $this->runApp('GET', '/get-parameters', [], '');
+	    $this->assertEquals(500, $response->getStatusCode());
+	}
 }

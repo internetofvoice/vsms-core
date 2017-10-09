@@ -5,12 +5,12 @@ namespace Tests\InternetOfVoice\VSMS\Core\Fixtures;
 use InternetOfVoice\VSMS\Core\Controller\AbstractLinkController;
 
 /**
- * MockLinkController
+ * Class MockLinkController
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class MockLinkController extends AbstractLinkController
-{
+class MockLinkController extends AbstractLinkController {
     /**
      * Get parameters
      *

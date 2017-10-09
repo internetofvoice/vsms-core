@@ -5,12 +5,12 @@ namespace InternetOfVoice\VSMS\Core\Helper;
 use Analog\Logger;
 
 /**
- * LogHelper
+ * Class LogHelper
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class LogHelper extends Logger
-{
+class LogHelper extends Logger {
     /** @var array $mask */
     protected $mask = [];
 
@@ -28,7 +28,7 @@ class LogHelper extends Logger
     /**
      * Set mask
      *
-     * @param   array   $mask
+     * @param   array   $mask   Keys, whose values should be masked out in logs (helpful to suppress sensitive data)
      * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */

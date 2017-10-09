@@ -2,13 +2,15 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
+use InvalidArgumentException;
+
 /**
- * AbstractLinkController
+ * Class AbstractLinkController
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-abstract class AbstractLinkController extends AbstractController
-{
+abstract class AbstractLinkController extends AbstractController {
     /**
      * Validate request parameters
      *
@@ -44,7 +46,7 @@ abstract class AbstractLinkController extends AbstractController
         }
 
         if(count($errors)) {
-            throw new \InvalidArgumentException('Missing or incorrect parameters: ' . implode(', ', $errors));
+            throw new InvalidArgumentException('Missing or incorrect parameters: ' . implode(', ', $errors));
         } else {
             return [
                 'state'         => $state,

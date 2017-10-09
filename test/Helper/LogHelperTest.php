@@ -8,12 +8,12 @@ use InternetOfVoice\VSMS\Core\Helper\LogHelper;
 use Tests\InternetOfVoice\VSMS\Core\Controller\ControllerTestCase;
 
 /**
- * LogHelperTest
+ * Class LogHelperTest
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class LogHelperTest extends ControllerTestCase
-{
+class LogHelperTest extends ControllerTestCase {
     /**
      * testLogger
      */
@@ -29,7 +29,7 @@ class LogHelperTest extends ControllerTestCase
     }
 
     public function testRequestLogger() {
-        $request = $this->createRequest('POST', '/test/url', [], json_encode(['key' => 'value', 'key2' => 'value2']));
+        $request = $this->createRequest('POST', '/test/url?param=value', [], json_encode(['key' => 'value', 'key2' => 'value2']));
         $log     = '';
         $logger  = new LogHelper;
         $logger->format('%s - %s - %s - %s' . PHP_EOL);
@@ -38,6 +38,7 @@ class LogHelperTest extends ControllerTestCase
         $logger->logRequest($request, ['extra-key' => 'extra-value']);
 
         $this->assertContains('DEBUG - POST LogHelperTest::testRequestLogger {"extra-key":"extra-value"}', $log);
+	    $this->assertContains('DEBUG - Query params', $log);
         $this->assertContains('DEBUG - Header', $log);
         $this->assertContains('DEBUG - Body: {"key":"***","key2":"value2"}', $log);
     }

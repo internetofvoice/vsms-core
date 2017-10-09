@@ -5,15 +5,16 @@ namespace Tests\InternetOfVoice\VSMS\Core\Fixtures;
 use InternetOfVoice\VSMS\Core\Controller\AbstractSkillController;
 
 /**
- * MockSkillController
+ * Class MockSkillController
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-final class MockSkillController extends AbstractSkillController
-{
+class MockSkillController extends AbstractSkillController {
     /** @var array $askApplicationIds */
     protected $askApplicationIds = [
-        'dev-test' => 'amzn1.ask.skill.ef9d2df5-6c65-47b5-9f74-3e6a064c45e6',
+        'dev-test1' => 'amzn1.ask.skill.ef9d2df5-6c65-47b5-9f74-3e6a064c45e6',
+        'dev-test2' => 'amzn1.ask.skill.e5427198-b2de-4f89-ac18-b54a4877927f',
     ];
 
     /** @var array $messages */

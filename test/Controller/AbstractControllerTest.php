@@ -6,12 +6,12 @@ use Slim\Http\Response;
 use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockController;
 
 /**
- * AbstractControllerTest
+ * Class AbstractControllerTest
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class AbstractControllerTest extends ControllerTestCase
-{
+class AbstractControllerTest extends ControllerTestCase {
     /**
      * Run application
      *
