@@ -27,7 +27,7 @@
     "require": {
         "php": ">=5.5.0",
         "slim/slim": "^3.8",
-        "internetofvoice/amazon-alexa-php": "~0.2",
+        "internetofvoice/libvoice": ">=0.9",
         "analog/analog": "dev-master"
     },
     "require-dev": {
