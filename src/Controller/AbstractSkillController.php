@@ -64,6 +64,7 @@ abstract class AbstractSkillController extends AbstractController {
             $this->askApplicationIds,
 	        $request->getHeaderLine('Signaturecertchainurl'),
 	        $request->getHeaderLine('Signature'),
+	        $this->settings['validateTimestamp'],
 	        $this->settings['validateCertificate']
         );
 

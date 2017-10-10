@@ -8,15 +8,16 @@
  */
 
 return [
-    'settings' => [
-        'displayErrorDetails'       => true,
-        'addContentLengthHeader'    => false,
-        'validateCertificate'       => false,
-        'environment'               => 'dev-test',
+	'settings' => [
+		'displayErrorDetails'    => true,
+		'addContentLengthHeader' => false,
+		'validateTimestamp'      => false,
+		'validateCertificate'    => true,
+		'environment'            => 'dev-test',
 
-        'auto_init'                 => ['logger', 'translator', 'skillHelper'],
+		'auto_init' => ['logger', 'translator', 'skillHelper'],
 
-        'locale_default'            => 'en-US',
-        'locales'                   => ['de-DE', 'en-US', 'en-GB'],
-    ]
+		'locale_default' => 'en-US',
+		'locales'        => ['de-DE', 'en-US', 'en-GB'],
+	],
 ];
