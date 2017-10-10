@@ -173,13 +173,13 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase {
 	    $result = $helper->convertDateTimeToHuman(new \DateTime('yesterday'), ['relative'], $translations);
 	    $this->assertEquals('gestern', $result);
 
-		// Test "last <day>", which does not work if <day> is same as today, so...
-	    if(date('l') == 'Monday') {
-		    $result = $helper->convertDateTimeToHuman(new \DateTime('last friday'), ['relative'], $translations);
-		    $this->assertEquals('am Freitag', $result);
+		// Test "last <day>" - does not work if <day> is today or yesterday, so ensure another day.
+	    if(date('N') > 2) {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('last monday'), ['relative'], $translations);
+            $this->assertEquals('am Montag', $result);
 	    } else {
-		    $result = $helper->convertDateTimeToHuman(new \DateTime('last monday'), ['relative'], $translations);
-		    $this->assertEquals('am Montag', $result);
+            $result = $helper->convertDateTimeToHuman(new \DateTime('last friday'), ['relative'], $translations);
+            $this->assertEquals('am Freitag', $result);
 	    }
 
     }
