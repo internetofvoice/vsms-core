@@ -16,10 +16,10 @@ use Slim\Container;
  * @license http://opensource.org/licenses/MIT
  */
 abstract class AbstractSkillController extends AbstractController {
-	/** @var string $voiceInterface */
-	protected $voiceInterface;
+    /** @var string $voiceInterface */
+    protected $voiceInterface;
 
-	/** @var AlexaRequest $alexaRequest */
+    /** @var AlexaRequest $alexaRequest */
     protected $alexaRequest;
 
     /** @var AlexaResponse $alexaResponse */

@@ -1,7 +1,12 @@
 # Changelog
 
-Changes to this library are documented in reverse chronological order.
+Changes are documented in reverse chronological order.
 
-## 1.0.0 (2017-09-11) 
+## Version 1.2.0 (2017-10-11) 
+* Switch to [LibVoice](https://github.com/internetofvoice/libvoice) library
 
-Initial release.
+## Version 1.0.1 (2017-09-27) 
+* Add exception handling
+
+## Version 1.0.0 (2017-09-11) 
+* First public release
