@@ -298,6 +298,7 @@ class SkillHelper {
      * months:     ['January', ..., 'December']
      * today:      'today'
      * yesterday:  'yesterday'
+     * prefix_48h: prefix for today / yesterday (like 'on' or 'at' or empty string, if not needed)
      * prefix_rel: prefix for relative dates (like 'on' or 'at' or empty string, if not needed)
      * prefix_abs: prefix for absolute dates (like 'on' or 'at' or empty string, if not needed)
      * at:         'at'
@@ -319,13 +320,15 @@ class SkillHelper {
         if(in_array('relative', $options) && ($diff < 604800)) {
             // Today
             if($date->format('d') == date('d')) {
+	            array_push($result, $translations['prefix_48h']);
                 array_push($result, $translations['today']);
 
-                // Yesterday
+            // Yesterday
             } elseif($date->format('d') == date('d', time() - 86400)) {
+	            array_push($result, $translations['prefix_48h']);
                 array_push($result, $translations['yesterday']);
 
-                // Day name
+            // Day name
             } else {
 	            array_push($result, $translations['prefix_rel']);
                 array_push($result, $translations['days'][$date->format('N') - 1]);

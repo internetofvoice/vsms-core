@@ -158,6 +158,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase {
             'months' => ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
             'today'  => 'heute',
             'yesterday'  => 'gestern',
+            'prefix_48h' => '',
             'prefix_rel' => 'am',
             'prefix_abs' => 'am',
             'at'         => 'um',
