@@ -5,21 +5,60 @@ namespace Tests\InternetOfVoice\VSMS\Core\Helper;
 use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
 
 /**
- * SkillHelperTest
+ * Class SkillHelperTest
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
 
-class SkillHelperTest extends \PHPUnit_Framework_TestCase
-{
+class SkillHelperTest extends \PHPUnit_Framework_TestCase {
+	/**
+	 * testGetDateFromSeason
+	 */
     public function testGetDateFromSeason() {
         $helper = new SkillHelper();
         $result = $helper->getDateFromSeason(2017, 'spring', 'northern');
         $this->assertEquals('2017-03-21', $result->format('Y-m-d'));
-        $result = $helper->getDateFromSeason(2016, 'fall', 'southern');
-        $this->assertEquals('2016-03-21', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'summer', 'northern');
+	    $this->assertEquals('2017-06-21', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'fall', 'northern');
+	    $this->assertEquals('2017-09-23', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'winter', 'northern');
+	    $this->assertEquals('2017-12-21', $result->format('Y-m-d'));
+
+
+	    $result = $helper->getDateFromSeason(2016, 'spring', 'southern');
+        $this->assertEquals('2016-09-23', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2016, 'summer', 'southern', false);
+	    $this->assertEquals('2015-12-21', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2016, 'fall', 'southern');
+	    $this->assertEquals('2016-03-21', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2016, 'winter', 'southern');
+	    $this->assertEquals('2016-06-21', $result->format('Y-m-d'));
+
+
+	    $result = $helper->getDateFromSeason(2017, 'fall', 'australia');
+	    $this->assertEquals('2017-03-01', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'winter', 'australia');
+	    $this->assertEquals('2017-06-01', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'spring', 'australia');
+	    $this->assertEquals('2017-09-01', $result->format('Y-m-d'));
+
+	    $result = $helper->getDateFromSeason(2017, 'summer', 'australia');
+	    $this->assertEquals('2017-12-01', $result->format('Y-m-d'));
     }
 
+	/**
+	 * testExtractAmazonDate
+	 */
     public function testExtractAmazonDate() {
         $helper = new SkillHelper();
 
@@ -75,24 +114,43 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
         list($start) = $helper->extractAmazonDate((date('Y') + 1) . '-' . date('m'), true);
         $this->assertEquals(date('Y'), $start->format('Y'));
 
-        // Fail on unknown formats
+		// Backdating of future day
+	    list($start) = $helper->extractAmazonDate(date('Y') . '-' . date('m') . '-' . (date('d') + 7), true);
+	    $this->assertEquals(date('Y-m-d'), $start->format('Y-m-d'));
+
+	    // Fail on unknown formats
         list($start, $end) = $helper->extractAmazonDate('THIS-IS-BS');
         $this->assertEquals(false, $start);
         $this->assertEquals(false, $end);
     }
 
+	/**
+	 * testExtractAmazonTime
+	 */
     public function testExtractAmazonTime() {
         $helper = new SkillHelper();
         $result = $helper->extractAmazonTime('16:17', new \DateTime('2017-05-14'));
         $this->assertEquals('2017-05-14 16:17:00', $result->format('Y-m-d H:i:s'));
-        $result = $helper->extractAmazonTime('AF', new \DateTime('2017-05-14'));
+
+	    $result = $helper->extractAmazonTime('NI', new \DateTime('2017-05-14'));
+	    $this->assertEquals('2017-05-14 00:00:00', $result->format('Y-m-d H:i:s'));
+
+	    $result = $helper->extractAmazonTime('MO', new \DateTime('2017-05-14'));
+	    $this->assertEquals('2017-05-14 06:00:00', $result->format('Y-m-d H:i:s'));
+
+	    $result = $helper->extractAmazonTime('AF', new \DateTime('2017-05-14'));
         $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
-        $result = $helper->extractAmazonTime('AF', new \DateTime('2017-05-14'));
-        $this->assertEquals('2017-05-14 12:00:00', $result->format('Y-m-d H:i:s'));
+
+        $result = $helper->extractAmazonTime('EV', new \DateTime('2017-05-14'));
+        $this->assertEquals('2017-05-14 18:00:00', $result->format('Y-m-d H:i:s'));
+
         $result = $helper->extractAmazonTime(false);
         $this->assertEquals(date('Y-m-d H:i'), $result->format('Y-m-d H:i'));
     }
 
+	/**
+	 * testConvertDateTimeToHuman
+	 */
     public function testConvertDateTimeToHuman() {
         $helper = new SkillHelper();
         $translations = [
@@ -106,10 +164,29 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase
             'o\'clock'   => 'Uhr',
         ];
 
-        $result = $helper->convertDateTimeToHuman(new \DateTime('2016-03-02 13:22:00'), ['with_time'], $translations);
+	    $result = $helper->convertDateTimeToHuman(new \DateTime('2016-03-02 13:22:00'), ['with_time'], $translations);
         $this->assertEquals('am 2. März 2016 um 13 Uhr 22', $result);
+
+	    $result = $helper->convertDateTimeToHuman(new \DateTime(), ['relative'], $translations);
+	    $this->assertEquals('heute', $result);
+
+	    $result = $helper->convertDateTimeToHuman(new \DateTime('yesterday'), ['relative'], $translations);
+	    $this->assertEquals('gestern', $result);
+
+		// Test "last <day>" - does not work if <day> is today or yesterday, so ensure another day.
+	    if(date('N') > 2) {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('last monday'), ['relative'], $translations);
+            $this->assertEquals('am Montag', $result);
+	    } else {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('last friday'), ['relative'], $translations);
+            $this->assertEquals('am Freitag', $result);
+	    }
+
     }
 
+	/**
+	 * testConvertListToHuman
+	 */
     public function testConvertListToHuman() {
         $helper = new SkillHelper();
         $result = $helper->convertListToHuman(['one', 'two', 'three'], 'or');

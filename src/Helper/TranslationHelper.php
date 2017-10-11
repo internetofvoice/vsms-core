@@ -3,12 +3,12 @@
 namespace InternetOfVoice\VSMS\Core\Helper;
 
 /**
- * TranslationHelper
+ * Class TranslationHelper
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class TranslationHelper
-{
+class TranslationHelper {
     /** @var array $locales  */
     protected $locales;
 
@@ -43,7 +43,7 @@ class TranslationHelper
      *
      * Try to match preferred and supported locales/languages
      *
-     * @param   string  $preferred  Preferred locale(s) or language(s), e.g. Accept-Language header
+     * @param   string  $preferred  Preferred locales or languages, e.g. Accept-Language header
      * @return  bool
      * @access  public
      * @author  a.schmidt@internet-of-voice.de

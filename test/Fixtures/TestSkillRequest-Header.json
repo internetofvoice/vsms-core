@@ -1,0 +1,4 @@
+{
+    "HTTP_SIGNATURE":"hWvouykTv\/8cIj0XQv9YfW7MggvLO8ioioe9b39DjhqK4vNWnm2XfM7AhR\/oOgHXQ39W4Dk3g2gzeeOsa\/8BlZbSQM2NESPGgNcmf9Ud8FV9Kd1TUmxfD9EvItRw37ctPTr\/WOsWO+3k5S0w+mtvmHlK2lPxYGs7Dw3orXd6M3sTEhJDmIw9hx1e2kJja+kurpHjmaMMPJDCS9Tjz5iJWy\/MpVECEs4+GIpgyAohyUpgT+EUFnriEm56Vj9xfWL22gZ5wOhIm4X63RDGG2DdtLAwzK7tPID7a56OhdjFc948zch0V983AwGDq1EXzyUo+eCY6YYXmJ6q8p2xAzaRRg==",
+    "HTTP_SIGNATURECERTCHAINURL":"https:\/\/s3.amazonaws.com\/echo.api\/echo-api-cert-4.pem"
+}

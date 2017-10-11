@@ -3,12 +3,12 @@
 namespace InternetOfVoice\VSMS\Core\Helper;
 
 /**
- * SkillHelper
+ * Class SkillHelper
  *
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
+ * @license http://opensource.org/licenses/MIT
  */
-class SkillHelper
-{
+class SkillHelper {
     /**
      * getDateFromSeason
      *
@@ -126,12 +126,10 @@ class SkillHelper
      * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#date
      */
     public function extractAmazonDate($amazon_date, $date_back = false) {
-		$start  = false;
-		$end    = false;
-		$origin = false;
+		$start = false;
+		$end   = false;
 
         switch(true) {
-            // Now
             case ($amazon_date == 'PRESENT_REF'):
                 $origin = 'now';
                 $start  = new \DateTime();
@@ -178,15 +176,8 @@ class SkillHelper
             break;
 
             // Year
-            case preg_match('~^[\d]{4}$~', $amazon_date):
-                $origin = 'year';
-                $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01-01');
-                $start->setTime(0, 0, 0);
-                $end = clone $start;
-                $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
-            break;
-
-            case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
+            case preg_match('~^([\d]{4})$~', $amazon_date, $matches):
+	        case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
                 $origin = 'year';
                 $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
                 $start->setTime(0, 0, 0);
@@ -211,9 +202,14 @@ class SkillHelper
                 $end = clone $start;
                 $end->add(new \DateInterval('P3M'))->sub(new \DateInterval('PT1S'));
             break;
+
+	        default:
+	        	// Unknown format
+		        return [$start, $end];
+            break;
         }
 
-        if($date_back && in_array($origin, ['date', 'month', 'season'])) {
+        if($start !== false && $date_back && in_array($origin, ['date', 'month', 'season'])) {
             $now  = new \DateTime();
             $diff = $now->getTimestamp() - $start->getTimestamp();
             if($diff < 0) {
@@ -275,6 +271,10 @@ class SkillHelper
             case ($amazon_time == 'EV'):
                 $date->setTime(18, 0, 0);
             break;
+
+	        default:
+	        	// do nothing, return defaults set above
+            break;
         }
 
         return $date;
@@ -309,7 +309,6 @@ class SkillHelper
      * @return  string
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
-     * @todo    options for ordering date parts, 12h/24h handling and enumerations ("1st" versus "1.")
      */
     public function convertDateTimeToHuman(\DateTime $date, $options = [], $translations = []) {
         $now    = new \DateTime();
@@ -318,8 +317,6 @@ class SkillHelper
 
         // Relative day, if not more than 7 days ago
         if(in_array('relative', $options) && ($diff < 604800)) {
-            array_push($result, $translations['prefix_rel']);
-
             // Today
             if($date->format('d') == date('d')) {
                 array_push($result, $translations['today']);
@@ -330,6 +327,7 @@ class SkillHelper
 
                 // Day name
             } else {
+	            array_push($result, $translations['prefix_rel']);
                 array_push($result, $translations['days'][$date->format('N') - 1]);
             }
         } else {
