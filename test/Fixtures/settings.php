@@ -12,7 +12,7 @@ return [
 		'displayErrorDetails'    => true,
 		'addContentLengthHeader' => false,
 		'validateTimestamp'      => false,
-		'validateCertificate'    => true,
+		'validateCertificate'    => false,
 		'environment'            => 'dev-test',
 
 		'auto_init' => ['logger', 'translator', 'skillHelper'],
