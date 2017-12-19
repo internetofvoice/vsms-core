@@ -2,8 +2,11 @@
 
 namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
-use Slim\Http\Response;
-use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockController;
+use \Exception;
+use \Slim\Exception\MethodNotAllowedException;
+use \Slim\Exception\NotFoundException;
+use \Slim\Http\Response;
+use \Tests\InternetOfVoice\VSMS\Core\Fixtures\MockController;
 
 /**
  * Class AbstractControllerTest
@@ -21,6 +24,9 @@ class AbstractControllerTest extends ControllerTestCase {
      * @param   array|object|null   $data       request data
      * @return  \Psr\Http\Message\ResponseInterface
      * @access  public
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
      * @author  a.schmidt@internet-of-voice.de
      */
     public function runApp($method, $uri, $headers = [], $data = null) {
@@ -38,6 +44,9 @@ class AbstractControllerTest extends ControllerTestCase {
      * Test abstract controller
      *
      * @access  public
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
      * @author  a.schmidt@internet-of-voice.de
      */
     public function testAbstractController() {

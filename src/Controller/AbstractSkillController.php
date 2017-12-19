@@ -2,12 +2,13 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
-use InternetOfVoice\LibVoice\Alexa\Request\AlexaRequest;
-use InternetOfVoice\LibVoice\Alexa\Request\Request\IntentRequest;
-use InternetOfVoice\LibVoice\Alexa\Response\AlexaResponse;
-use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
-use InvalidArgumentException;
-use Slim\Container;
+use \InternetOfVoice\LibVoice\Alexa\Request\AlexaRequest;
+use \InternetOfVoice\LibVoice\Alexa\Request\Request\IntentRequest;
+use \InternetOfVoice\LibVoice\Alexa\Response\AlexaResponse;
+use \InternetOfVoice\VSMS\Core\Helper\SkillHelper;
+use \Interop\Container\Exception\ContainerException;
+use \InvalidArgumentException;
+use \Slim\Container;
 
 /**
  * Class AbstractSkillController
@@ -37,6 +38,7 @@ abstract class AbstractSkillController extends AbstractController {
      *
      * @param   Container   $container  Slim app container
      * @access  public
+     * @throws  ContainerException
      * @author  a.schmidt@internet-of-voice.de
      */
     public function __construct(Container $container) {

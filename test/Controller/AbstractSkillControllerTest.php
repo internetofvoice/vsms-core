@@ -2,8 +2,12 @@
 
 namespace Tests\InternetOfVoice\VSMS\Core\Controller;
 
-use Slim\Http\Response;
-use Tests\InternetOfVoice\VSMS\Core\Fixtures\MockSkillController;
+use \Exception;
+use \Slim\Exception\MethodNotAllowedException;
+use \Slim\Exception\NotFoundException;
+use \Slim\Http\Response;
+use \Tests\InternetOfVoice\VSMS\Core\Fixtures\MockSkillController;
+
 
 /**
  * Class AbstractSkillControllerTest
@@ -21,6 +25,9 @@ class AbstractSkillControllerTest extends ControllerTestCase {
      * @param   array|object|null   $data       request data
      * @return  \Psr\Http\Message\ResponseInterface
      * @access	protected
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
      * @author	a.schmidt@internet-of-voice.de
      */
     protected function runApp($method, $uri, $headers = [], $data = null) {
@@ -35,6 +42,9 @@ class AbstractSkillControllerTest extends ControllerTestCase {
 
     /**
      * testLaunchRequest
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
      */
     public function testLaunchRequest() {
 	    $body     = file_get_contents(__DIR__ . '/../Fixtures/TestLaunchRequest-Body.txt');
@@ -57,6 +67,9 @@ class AbstractSkillControllerTest extends ControllerTestCase {
 
     /**
      * testHelpIntent
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
      */
     public function testHelpIntent() {
         $body     = file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest-Body.txt');
@@ -82,6 +95,9 @@ class AbstractSkillControllerTest extends ControllerTestCase {
 
 	/**
 	 * testSessionEndedRequest
+	 * @throws  Exception
+	 * @throws  MethodNotAllowedException
+	 * @throws  NotFoundException
 	 */
 	public function testSessionEndedRequest() {
 		$body     = trim(file_get_contents(__DIR__ . '/../Fixtures/TestSessionEndedRequest-Body.txt'));
