@@ -2,7 +2,8 @@
 
 namespace InternetOfVoice\VSMS\Core\Controller;
 
-use Slim\Container;
+use \Interop\Container\Exception\ContainerException;
+use \Slim\Container;
 
 /**
  * Class AbstractController
@@ -28,6 +29,7 @@ abstract class AbstractController {
      *
      * @param   \Slim\Container $container  Slim app container
      * @access  public
+     * @throws  ContainerException
      * @author  a.schmidt@internet-of-voice.de
      */
     public function __construct(Container $container) {
