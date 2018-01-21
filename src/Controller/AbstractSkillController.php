@@ -96,6 +96,8 @@ abstract class AbstractSkillController extends AbstractController {
      */
     protected function dispatchAlexaRequest($response) {
         switch($this->alexaRequest->getRequest()->getType()) {
+            // LibVoice catches unknown request types, so no default case required.
+
             case 'LaunchRequest':
                 $this->launch();
             break;
@@ -116,10 +118,6 @@ abstract class AbstractSkillController extends AbstractController {
 
 	        case 'SessionEndedRequest':
                 $this->sessionEnded();
-            break;
-
-            default:
-                throw new InvalidArgumentException('Unknown AlexaRequest type: ' . get_class($this->alexaRequest));
             break;
         }
 
