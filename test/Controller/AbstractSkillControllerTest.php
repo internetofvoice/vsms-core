@@ -110,4 +110,19 @@ class AbstractSkillControllerTest extends ControllerTestCase {
 			strval($response->getBody())
 		);
 	}
+
+    /**
+     * testUnknownIntent
+     * @throws  Exception
+     * @throws  MethodNotAllowedException
+     * @throws  NotFoundException
+     */
+    public function testUnknownIntent() {
+        $body = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest-Body.txt'), true);
+        $body['request']['intent']['name'] = 'NonExistentIntent';
+
+        $header   = json_decode(file_get_contents(__DIR__ . '/../Fixtures/TestSkillRequest-Header.json'), true);
+        $response = $this->runApp('POST', '/skill/test', $header, json_encode($body));
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }
