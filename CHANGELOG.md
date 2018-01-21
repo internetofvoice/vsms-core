@@ -2,6 +2,11 @@
 
 Changes are documented in reverse chronological order.
 
+## Version 1.2.3 (2018-01-21)
+* Fix bug in extraction of AMAZON.DATE slot type 
+* Extend exception handling
+* Improve test coverage
+
 ## Version 1.2.2 (2017-12-19)
 * Extend exception handling
 
