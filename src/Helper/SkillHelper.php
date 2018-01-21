@@ -129,103 +129,107 @@ class SkillHelper {
 		$start = false;
 		$end   = false;
 
-        switch(true) {
-            case ($amazon_date == 'PRESENT_REF'):
-                $origin = 'now';
-                $start  = new \DateTime();
-                $end    = clone $start;
-            break;
+		try {
+			switch (true) {
+				case ($amazon_date == 'PRESENT_REF'):
+					$origin = 'now';
+					$start  = new \DateTime();
+					$end    = clone $start;
+				break;
 
-            // Date
-            case preg_match('~^[\d]{4}-[\d]{2}-[\d]{2}$~', $amazon_date):
-                $origin = 'date';
-                $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date);
-                $start->setTime(0, 0, 0);
-                $end = clone $start;
-                $end->setTime(23, 59, 59);
-            break;
+				// Date
+				case preg_match('~^[\d]{4}-[\d]{2}-[\d]{2}$~', $amazon_date):
+					$origin = 'date';
+					$start  = \DateTime::createFromFormat('Y-m-d', $amazon_date);
+					$start->setTime(0, 0, 0);
+					$end = clone $start;
+					$end->setTime(23, 59, 59);
+				break;
 
-            // Week
-            case preg_match('~^([\d]{4})-W([\d]{2})$~', $amazon_date, $matches):
-                $origin = 'week';
-                $start  = new \DateTime();
-                $start->setTime(0, 0, 0);
-                $start->setISODate(intval($matches[1]), intval($matches[2]));
-                $end = clone $start;
-                $end->add(new \DateInterval('P1W'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Week
+				case preg_match('~^([\d]{4})-W([\d]{1,2})$~', $amazon_date, $matches):
+					$origin = 'week';
+					$start  = new \DateTime();
+					$start->setTime(0, 0, 0);
+					$start->setISODate(intval($matches[1]), intval($matches[2]));
+					$end = clone $start;
+					$end->add(new \DateInterval('P1W'))->sub(new \DateInterval('PT1S'));
+				break;
 
-            // Weekend
-            case preg_match('~^([\d]{4})-W([\d]{2})-WE$~', $amazon_date, $matches):
-                $origin = 'weekend';
-                $start  = new \DateTime();
-                $start->setTime(0, 0, 0);
-                $start->setISODate(intval($matches[1]), intval($matches[2]));
-                $start->add(new \DateInterval('P5D'));
-                $end = clone $start;
-                $end->add(new \DateInterval('P2D'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Weekend
+				case preg_match('~^([\d]{4})-W([\d]{1,2})-WE$~', $amazon_date, $matches):
+					$origin = 'weekend';
+					$start  = new \DateTime();
+					$start->setTime(0, 0, 0);
+					$start->setISODate(intval($matches[1]), intval($matches[2]));
+					$start->add(new \DateInterval('P5D'));
+					$end = clone $start;
+					$end->add(new \DateInterval('P2D'))->sub(new \DateInterval('PT1S'));
+				break;
 
-            // Month
-            case preg_match('~^[\d]{4}-[\d]{2}$~', $amazon_date):
-                $origin = 'month';
-                $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01');
-                $start->setTime(0, 0, 0);
-                $end = clone $start;
-                $end->add(new \DateInterval('P1M'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Month
+				case preg_match('~^[\d]{4}-[\d]{2}$~', $amazon_date):
+					$origin = 'month';
+					$start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01');
+					$start->setTime(0, 0, 0);
+					$end = clone $start;
+					$end->add(new \DateInterval('P1M'))->sub(new \DateInterval('PT1S'));
+				break;
 
-            // Year
-            case preg_match('~^([\d]{4})$~', $amazon_date, $matches):
-	        case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
-                $origin = 'year';
-                $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
-                $start->setTime(0, 0, 0);
-                $end = clone $start;
-                $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Year
+				case preg_match('~^([\d]{4})$~', $amazon_date, $matches):
+				case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
+					$origin = 'year';
+					$start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
+					$start->setTime(0, 0, 0);
+					$end = clone $start;
+					$end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
+				break;
 
-            // Decade
-            case preg_match('~^([\d]{3})X$~', $amazon_date, $matches):
-                $origin = 'decade';
-                $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '0-01-01');
-                $start->setTime(0, 0, 0);
-                $end = clone $start;
-                $end->add(new \DateInterval('P10Y'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Decade
+				case preg_match('~^([\d]{3})X$~', $amazon_date, $matches):
+					$origin = 'decade';
+					$start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '0-01-01');
+					$start->setTime(0, 0, 0);
+					$end = clone $start;
+					$end->add(new \DateInterval('P10Y'))->sub(new \DateInterval('PT1S'));
+				break;
 
-            // Season
-            case preg_match('~^([\d]{4})-(SP|SU|FA|WI)$~', $amazon_date, $matches):
-                $seasons = ['SP' => 'spring', 'SU' => 'summer', 'FA' => 'fall', 'WI' => 'winter'];
-                $origin  = 'season';
-                $start   = $this->getDateFromSeason(intval($matches[1]), $seasons[$matches[2]], 'northern', false);
-                $end = clone $start;
-                $end->add(new \DateInterval('P3M'))->sub(new \DateInterval('PT1S'));
-            break;
+				// Season
+				case preg_match('~^([\d]{4})-(SP|SU|FA|WI)$~', $amazon_date, $matches):
+					$seasons = ['SP' => 'spring', 'SU' => 'summer', 'FA' => 'fall', 'WI' => 'winter'];
+					$origin  = 'season';
+					$start   = $this->getDateFromSeason(intval($matches[1]), $seasons[$matches[2]], 'northern', false);
+					$end     = clone $start;
+					$end->add(new \DateInterval('P3M'))->sub(new \DateInterval('PT1S'));
+				break;
 
-	        default:
-	        	// Unknown format
-		        return [$start, $end];
-            break;
-        }
+				default:
+					// Unknown format
+					return [$start, $end];
+				break;
+			}
 
-        if($start !== false && $date_back && in_array($origin, ['date', 'month', 'season'])) {
-            $now  = new \DateTime();
-            $diff = $now->getTimestamp() - $start->getTimestamp();
-            if($diff < 0) {
-                // Need to date back as requested with $date_back for some origins.
-                if($diff > -604800) {
-                    // If difference is less than seven days and origin is date, most likely a day name was given.
-                    $start->sub(new \DateInterval('P7D'));
-                    $end->sub(new \DateInterval('P7D'));
-                } else {
-                    // In all other cases, subtract a year (for dates like "3rd of November", months like "August"
-                    // and seasons like "Winter")
-                    $start->sub(new \DateInterval('P1Y'));
-                    $end->sub(new \DateInterval('P1Y'));
-                }
-            }
-        }
+			if ($start !== false && $date_back && in_array($origin, ['date', 'month', 'season'])) {
+				$now  = new \DateTime();
+				$diff = $now->getTimestamp() - $start->getTimestamp();
+				if ($diff < 0) {
+					// Need to date back as requested with $date_back for some origins.
+					if ($diff > - 604800) {
+						// If difference is less than seven days and origin is date, most likely a day name was given.
+						$start->sub(new \DateInterval('P7D'));
+						$end->sub(new \DateInterval('P7D'));
+					} else {
+						// In all other cases, subtract a year (for dates like "3rd of November", months like "August"
+						// and seasons like "Winter")
+						$start->sub(new \DateInterval('P1Y'));
+						$end->sub(new \DateInterval('P1Y'));
+					}
+				}
+			}
+		} catch (\Exception $e) {
+			// still [false, false] as desired.
+		}
 
         return [$start, $end];
     }
