@@ -2,6 +2,9 @@
 
 Changes are documented in reverse chronological order.
 
+## Version 1.2.4 (2018-12-16)
+* Switch to [analog-stable](https://github.com/jbroadway/analog) library
+
 ## Version 1.2.3 (2018-01-21)
 * Fix bug in extraction of AMAZON.DATE slot type 
 * Extend exception handling
