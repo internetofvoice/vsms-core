@@ -2,6 +2,9 @@
 
 Changes are documented in reverse chronological order.
 
+## Version 1.3.0 (2019-02-17)
+* Support variants in TranslationHelper (multiple translations, pick one by random)  
+
 ## Version 1.2.4 (2018-12-16)
 * Switch to [analog-stable](https://github.com/jbroadway/analog) library
 

@@ -36,6 +36,8 @@ class TranslationHelperTest extends \PHPUnit_Framework_TestCase {
 
 	    $this->assertFalse($helper->t());
 
+	    $this->assertContains($helper->t('array2', 'two'), ['One two three.', 'Three two one.']);
+
 	    $this->assertEquals('NON_EXISTENT_WORD_COMBINATION', $helper->a('NON_EXISTENT_WORD_COMBINATION'));
         $this->assertArrayHasKey('key1', $helper->a('array'));
     }

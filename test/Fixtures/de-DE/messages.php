@@ -14,4 +14,9 @@ return [
         'key1' => 'value1',
         'key2' => 'value2',
     ],
+
+    'array2' => [
+    	'key1' => 'One %1$s three.',
+    	'key2' => 'Three %1$s one.',
+    ]
 ];
