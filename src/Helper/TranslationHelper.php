@@ -122,11 +122,20 @@ class TranslationHelper {
         }
 
         $message = array_shift($args);
+
         if(!isset($this->messages[$message])) {
+	        // No translation available, return original string
             return vsprintf($message, $args);
         }
 
-        return vsprintf($this->messages[$message], $args);
+		$translation = $this->messages[$message];
+        if(is_array($translation)) {
+        	// Variations found, pick a translation by random
+        	$translation = $translation[array_rand($translation)];
+        }
+
+        // Return translation with optional replacements
+        return vsprintf($translation, $args);
     }
 
     /**
