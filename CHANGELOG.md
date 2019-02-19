@@ -2,6 +2,9 @@
 
 Changes are documented in reverse chronological order.
 
+## Version 1.3.1 (2019-02-19)
+* Add support for future dates in SkillHelper::convertDateTimeToHuman()  
+
 ## Version 1.3.0 (2019-02-17)
 * Support variants in TranslationHelper (multiple translations, pick one by random)  
 
