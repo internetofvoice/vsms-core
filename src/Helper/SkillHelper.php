@@ -304,8 +304,10 @@ class SkillHelper {
      * Can be configured to reply with relative day names (today, yesterday, friday, ...) instead of day number
      *
      * Options array values:
-     * relative:  return "today", "yesterday", "tomorrow" or "friday" if applicable; day number otherwise
-     * with_time: including time portion in response (seconds are omitted)
+     * relative:     return "today", "yesterday", "tomorrow" or "friday" if applicable; day number otherwise
+     * with_time:    including time portion in response (seconds are omitted)
+     * with_year:    enforce inclusion of year (current year is omitted by default)
+     * with_minutes: enforce inclusion of minutes (zero minute is omitted by default)
      *
      * Translations array keys:
      * days:        ['Monday', ..., 'Sunday']
@@ -384,9 +386,9 @@ class SkillHelper {
 	            // Month name
 	            array_push($result, $translations['months'][$date->format('n') - 1]);
 
-	            // Year, if not current
+	            // Year
 	            $year = $date->format('Y');
-	            if($year != date('Y')) {
+	            if($year != date('Y') || in_array('with_year', $options)) {
 	                array_push($result, $year);
 	            }
 	        }
@@ -398,9 +400,9 @@ class SkillHelper {
 	            array_push($result, $date->format('G'));
 	            array_push($result, $translations['o\'clock']);
 
-	            // Minutes without leading zero, only if greater than zero
+	            // Minutes without leading zero
 	            $minutes = intval($date->format('i'));
-	            if($minutes > 0) {
+	            if($minutes > 0  || in_array('with_minutes', $options)) {
 	                array_push($result, $minutes);
 	            }
 	        }

@@ -178,13 +178,23 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase {
         $result = $helper->convertDateTimeToHuman(new \DateTime('2034-08-21 08:00:00'), ['with_time'], $translations);
         $this->assertEquals('am 21. August 2034 um 8 Uhr', $result);
 
-        // absolute date in current year
+	    // absolute date, including time (enforce minutes)
+	    $result = $helper->convertDateTimeToHuman(new \DateTime('2034-08-21 08:00:00'), ['with_time', 'with_minutes'], $translations);
+	    $this->assertEquals('am 21. August 2034 um 8 Uhr 0', $result);
+
+	    // absolute date in current year
         if(date('m') > 6) {
             $result = $helper->convertDateTimeToHuman(new \DateTime('1. january'), [], $translations);
             $this->assertEquals('am 1. Januar', $result);
+
+	        $result = $helper->convertDateTimeToHuman(new \DateTime('1. january'), ['with_year'], $translations);
+	        $this->assertEquals('am 1. Januar ' . date('Y'), $result);
         } else {
             $result = $helper->convertDateTimeToHuman(new \DateTime('1. december'), [], $translations);
             $this->assertEquals('am 1. Dezember', $result);
+
+	        $result = $helper->convertDateTimeToHuman(new \DateTime('1. december'), ['with_year'], $translations);
+	        $this->assertEquals('am 1. Dezember ' . date('Y'), $result);
         }
 
         // today (1)
