@@ -126,6 +126,7 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * testExtractAmazonTime
+	 * @throws \Exception
 	 */
     public function testExtractAmazonTime() {
         $helper = new SkillHelper();
@@ -150,39 +151,76 @@ class SkillHelperTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * testConvertDateTimeToHuman
+	 * @throws \Exception
 	 */
     public function testConvertDateTimeToHuman() {
         $helper = new SkillHelper();
         $translations = [
-            'days'   => ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
-            'months' => ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
-            'today'  => 'heute',
-            'yesterday'  => 'gestern',
-            'prefix_48h' => '',
-            'prefix_rel' => 'am',
-            'prefix_abs' => 'am',
-            'at'         => 'um',
-            'o\'clock'   => 'Uhr',
+            'days'        => ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+            'months'      => ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
+            'today'       => 'heute',
+            'yesterday'   => 'gestern',
+            'tomorrow'    => 'morgen',
+            'prefix_48h'  => '',
+            'prefix_rel'  => '',
+            'prefix_next' => 'kommenden',
+            'prefix_last' => 'letzten',
+            'prefix_abs'  => 'am',
+            'at'          => 'um',
+            'o\'clock'    => 'Uhr',
         ];
 
+        // absolute date, including time
 	    $result = $helper->convertDateTimeToHuman(new \DateTime('2016-03-02 13:22:00'), ['with_time'], $translations);
         $this->assertEquals('am 2. März 2016 um 13 Uhr 22', $result);
 
+        // absolute date, including time (only hour)
+        $result = $helper->convertDateTimeToHuman(new \DateTime('2034-08-21 08:00:00'), ['with_time'], $translations);
+        $this->assertEquals('am 21. August 2034 um 8 Uhr', $result);
+
+        // absolute date in current year
+        if(date('m') > 6) {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('1. january'), [], $translations);
+            $this->assertEquals('am 1. Januar', $result);
+        } else {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('1. december'), [], $translations);
+            $this->assertEquals('am 1. Dezember', $result);
+        }
+
+        // today (1)
 	    $result = $helper->convertDateTimeToHuman(new \DateTime(), ['relative'], $translations);
 	    $this->assertEquals('heute', $result);
 
-	    $result = $helper->convertDateTimeToHuman(new \DateTime('yesterday'), ['relative'], $translations);
+        // today (2)
+        $today = new \DateTime();
+        $result = $helper->convertDateTimeToHuman($today->sub(new \DateInterval('PT1M')), ['relative'], $translations);
+        $this->assertEquals('heute', $result);
+
+        // yesterday
+        $result = $helper->convertDateTimeToHuman(new \DateTime('yesterday'), ['relative'], $translations);
 	    $this->assertEquals('gestern', $result);
 
-		// Test "last <day>" - does not work if <day> is today or yesterday, so ensure another day.
+        // tomorrow
+        $result = $helper->convertDateTimeToHuman(new \DateTime('tomorrow'), ['relative'], $translations);
+        $this->assertEquals('morgen', $result);
+
+		// last <day> - ensure a 48h gap to get a day name
 	    if(date('N') > 2) {
             $result = $helper->convertDateTimeToHuman(new \DateTime('last monday'), ['relative'], $translations);
-            $this->assertEquals('am Montag', $result);
+            $this->assertEquals('letzten Montag', $result);
 	    } else {
             $result = $helper->convertDateTimeToHuman(new \DateTime('last friday'), ['relative'], $translations);
-            $this->assertEquals('am Freitag', $result);
+            $this->assertEquals('letzten Freitag', $result);
 	    }
 
+		// next <day> - ensure a 48h gap to get a day name
+        if (date('N') > 2) {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('next monday'), ['relative'], $translations);
+            $this->assertEquals('kommenden Montag', $result);
+        } else {
+            $result = $helper->convertDateTimeToHuman(new \DateTime('next friday'), ['relative'], $translations);
+            $this->assertEquals('kommenden Freitag', $result);
+        }
     }
 
 	/**
