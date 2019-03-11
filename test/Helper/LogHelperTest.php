@@ -42,4 +42,19 @@ class LogHelperTest extends ControllerTestCase {
         $this->assertContains('DEBUG - Header', $log);
         $this->assertContains('DEBUG - Body: {"key":"***","key2":"value2"}', $log);
     }
+
+	public function testRequestLoggerNoHeader() {
+		$request = $this->createRequest('POST', '/test/url?param=value', [], json_encode(['key' => 'value', 'key2' => 'value2']));
+		$log     = '';
+		$logger  = new LogHelper;
+		$logger->format('%s - %s - %s - %s' . PHP_EOL);
+		$logger->handler(LevelName::init(Variable::init($log)));
+		$logger->setMask(['key']);
+		$logger->logRequest($request, ['extra-key' => 'extra-value'], false);
+
+		$this->assertContains('DEBUG - POST LogHelperTest::testRequestLoggerNoHeader {"extra-key":"extra-value"}', $log);
+		$this->assertContains('DEBUG - Query params', $log);
+		$this->assertNotContains('DEBUG - Header', $log);
+		$this->assertContains('DEBUG - Body: {"key":"***","key2":"value2"}', $log);
+	}
 }
