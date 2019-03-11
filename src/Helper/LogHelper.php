@@ -39,12 +39,13 @@ class LogHelper extends Logger {
     /**
      * Log server request
      *
-     * @param 	\Slim\Http\Request	    $request 	Request object
-     * @param 	array 					$extra      Additional log data
+     * @param 	\Slim\Http\Request	    $request 	    Request object
+     * @param 	array 					$extra          Additional log data
+     * @param 	bool 					$includeHeader  Whether to include header data
      * @access	public
      * @author	a.schmidt@internet-of-voice.de
      */
-    public function logRequest($request, $extra = []) {
+    public function logRequest($request, $extra = [], $includeHeader = true) {
         $extra = count($extra) ? ' ' . json_encode($extra) : '';
 
         // Caller info
@@ -60,12 +61,14 @@ class LogHelper extends Logger {
             $this->debug('Query params: ' . json_encode($params));
         }
 
-        // Request headers
-        $headers = array_map(function($element) {
-            return implode(', ', $element);
-        }, $request->getHeaders());
+        // Request headers, if applicable
+	    if($includeHeader) {
+		    $headers = array_map(function($element) {
+			    return implode(', ', $element);
+		    }, $request->getHeaders());
 
-        $this->debug('Header: ' . json_encode($headers));
+		    $this->debug('Header: ' . json_encode($headers));
+	    }
 
         // Request body, if applicable
         $body = $request->getParsedBody();
