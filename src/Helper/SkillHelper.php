@@ -2,6 +2,10 @@
 
 namespace InternetOfVoice\VSMS\Core\Helper;
 
+use \DateInterval;
+use \DateTime;
+use \Exception;
+
 /**
  * Class SkillHelper
  *
@@ -23,12 +27,12 @@ class SkillHelper {
 	 *
 	 * Based on code by http://biostall.com/get-the-current-season-using-php/
 	 *
-	 * @param   int $year Year
-	 * @param   string $season Season {spring, summer, fall, winter}
-	 * @param   string $hemisphere Hemisphere {northern, southern, australia}
-	 * @param   bool $force_year Enforce given year?
+	 * @param   int     $year       Year
+	 * @param   string  $season     Season {spring, summer, fall, winter}
+	 * @param   string  $hemisphere Hemisphere {northern, southern, australia}
+	 * @param   bool    $force_year Enforce given year?
 	 *
-	 * @return  false|\DateTime
+	 * @return  false|DateTime
 	 * @access  public
 	 * @author  a.schmidt@internet-of-voice.de
 	 */
@@ -41,19 +45,19 @@ class SkillHelper {
 	            case 'northern':
 	                switch($season) {
 	                    case 'spring':
-	                        $date = new \DateTime($year . '-03-21');
+	                        $date = new DateTime($year . '-03-21');
 	                    break;
 
 	                    case 'summer':
-	                        $date = new \DateTime($year . '-06-21');
+	                        $date = new DateTime($year . '-06-21');
 	                    break;
 
 	                    case 'fall':
-	                        $date = new \DateTime($year . '-09-23');
+	                        $date = new DateTime($year . '-09-23');
 	                    break;
 
 	                    case 'winter':
-	                        $date = new \DateTime(($year - $offset) . '-12-21');
+	                        $date = new DateTime(($year - $offset) . '-12-21');
 	                    break;
 	                }
 	            break;
@@ -61,19 +65,19 @@ class SkillHelper {
 	            case 'southern':
 	                switch($season) {
 	                    case 'fall':
-	                        $date = new \DateTime($year . '-03-21');
+	                        $date = new DateTime($year . '-03-21');
 	                    break;
 
 	                    case 'winter':
-	                        $date = new \DateTime($year . '-06-21');
+	                        $date = new DateTime($year . '-06-21');
 	                    break;
 
 	                    case 'spring':
-	                        $date = new \DateTime($year . '-09-23');
+	                        $date = new DateTime($year . '-09-23');
 	                    break;
 
 	                    case 'summer':
-	                        $date = new \DateTime(($year - $offset) . '-12-21');
+	                        $date = new DateTime(($year - $offset) . '-12-21');
 	                    break;
 	                }
 	            break;
@@ -81,28 +85,28 @@ class SkillHelper {
 	            case 'australia':
 	                switch($season) {
 	                    case 'fall':
-	                        $date = new \DateTime($year . '-03-01');
+	                        $date = new DateTime($year . '-03-01');
 	                    break;
 
 	                    case 'winter':
-	                        $date = new \DateTime($year . '-06-01');
+	                        $date = new DateTime($year . '-06-01');
 	                    break;
 
 	                    case 'spring':
-	                        $date = new \DateTime($year . '-09-01');
+	                        $date = new DateTime($year . '-09-01');
 	                    break;
 
 	                    case 'summer':
-	                        $date = new \DateTime(($year - $offset) . '-12-01');
+	                        $date = new DateTime(($year - $offset) . '-12-01');
 	                    break;
 	                }
 	            break;
 	        }
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             // still false
         }
 
-        if($date instanceof \DateTime) {
+        if($date instanceof DateTime) {
             $date->setTime(0, 0, 0);
         }
 
@@ -126,7 +130,7 @@ class SkillHelper {
      * @param   string      $amazon_date    AMAZON.DATE slot value
      * @param   bool        $date_back      Enforce a date in the past?
      * @param   string      $hemisphere     'northern' (default), 'southern' or 'australia' - used for extracting a season date (ex: 2019-WI)
-     * @return  \DateTime[]
+     * @return  DateTime[]
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
      * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#date
@@ -139,66 +143,76 @@ class SkillHelper {
 	        switch (true) {
 	            case ($amazon_date == 'PRESENT_REF'):
 	                $origin = 'now';
-	                $start  = new \DateTime();
+	                $start  = new DateTime();
 	                $end    = clone $start;
 	            break;
 
 	            // Date
 	            case preg_match('~^[\d]{4}-[\d]{2}-[\d]{2}$~', $amazon_date):
 	                $origin = 'date';
-	                $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date);
+	                $start  = DateTime::createFromFormat('Y-m-d', $amazon_date);
 	                $start->setTime(0, 0, 0);
 	                $end = clone $start;
 	                $end->setTime(23, 59, 59);
 	            break;
 
-	            // Week
+		        // Day
+		        case preg_match('~^XXXX-XX-([\d]{2})$~', $amazon_date, $matches):
+			        $origin = 'day';
+			        $start  = DateTime::createFromFormat('Y-m-d', date('Y') . '-' . date('m') . '-' . $matches[1]);
+			        $start->setTime(0, 0, 0);
+			        $end = clone $start;
+			        $end->setTime(23, 59, 59);
+		        break;
+
+		        // Week
 	            case preg_match('~^([\d]{4})-W([\d]{1,2})$~', $amazon_date, $matches):
 	                $origin = 'week';
-	                $start  = new \DateTime();
+	                $start  = new DateTime();
 	                $start->setTime(0, 0, 0);
 	                $start->setISODate(intval($matches[1]), intval($matches[2]));
 	                $end = clone $start;
-	                $end->add(new \DateInterval('P1W'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P1W'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            // Weekend
 	            case preg_match('~^([\d]{4})-W([\d]{1,2})-WE$~', $amazon_date, $matches):
 	                $origin = 'weekend';
-	                $start  = new \DateTime();
+	                $start  = new DateTime();
 	                $start->setTime(0, 0, 0);
 	                $start->setISODate(intval($matches[1]), intval($matches[2]));
-	                $start->add(new \DateInterval('P5D'));
+	                $start->add(new DateInterval('P5D'));
 	                $end = clone $start;
-	                $end->add(new \DateInterval('P2D'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P2D'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            // Month
-	            case preg_match('~^[\d]{4}-[\d]{2}$~', $amazon_date):
+	            case preg_match('~^([\d]{4}-[\d]{2})$~', $amazon_date, $matches):
+	            case preg_match('~^([\d]{4}-[\d]{2})-XX$~', $amazon_date, $matches):
 	                $origin = 'month';
-	                $start  = \DateTime::createFromFormat('Y-m-d', $amazon_date . '-01');
+	                $start  = DateTime::createFromFormat('Y-m-d', $matches[1] . '-01');
 	                $start->setTime(0, 0, 0);
 	                $end = clone $start;
-	                $end->add(new \DateInterval('P1M'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P1M'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            // Year
 	            case preg_match('~^([\d]{4})$~', $amazon_date, $matches):
 	            case preg_match('~^([\d]{4})-XX-XX$~', $amazon_date, $matches):
 	                $origin = 'year';
-	                $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
+	                $start  = DateTime::createFromFormat('Y-m-d', $matches[1] . '-01-01');
 	                $start->setTime(0, 0, 0);
 	                $end = clone $start;
-	                $end->add(new \DateInterval('P1Y'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P1Y'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            // Decade
 	            case preg_match('~^([\d]{3})X$~', $amazon_date, $matches):
 	                $origin = 'decade';
-	                $start  = \DateTime::createFromFormat('Y-m-d', $matches[1] . '0-01-01');
+	                $start  = DateTime::createFromFormat('Y-m-d', $matches[1] . '0-01-01');
 	                $start->setTime(0, 0, 0);
 	                $end = clone $start;
-	                $end->add(new \DateInterval('P10Y'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P10Y'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            // Season
@@ -207,7 +221,7 @@ class SkillHelper {
 	                $origin  = 'season';
 	                $start   = $this->getDateFromSeason(intval($matches[1]), $seasons[$matches[2]], $hemisphere, false);
 	                $end     = clone $start;
-	                $end->add(new \DateInterval('P3M'))->sub(new \DateInterval('PT1S'));
+	                $end->add(new DateInterval('P3M'))->sub(new DateInterval('PT1S'));
 	            break;
 
 	            default:
@@ -216,24 +230,32 @@ class SkillHelper {
 	            break;
 	        }
 
-	        if ($start !== false && $date_back && in_array($origin, ['date', 'month', 'season'])) {
-	            $now  = new \DateTime();
-	            $diff = $now->getTimestamp() - $start->getTimestamp();
-	            if ($diff < 0) {
-	                // Need to date back as requested with $date_back for some origins.
-	                if ($diff > - 604800) {
-	                    // If difference is less than seven days and origin is date, most likely a day name was given.
-	                    $start->sub(new \DateInterval('P7D'));
-	                    $end->sub(new \DateInterval('P7D'));
-	                } else {
-	                    // In all other cases, subtract a year (for dates like "3rd of November", months like "August"
-	                    // and seasons like "Winter")
-	                    $start->sub(new \DateInterval('P1Y'));
-	                    $end->sub(new \DateInterval('P1Y'));
-	                }
-	            }
+	        if($start !== false && $date_back) {
+		        $now  = new DateTime();
+		        $diff = $now->getTimestamp() - $start->getTimestamp();
+		        if($diff < 0) {
+			        if(in_array($origin, ['date', 'month', 'season'])) {
+				        // Need to date back as requested with $date_back for some origins.
+				        if ($diff > - 604800) {
+					        // If difference is less than seven days and origin is date, most likely a day name was given.
+					        $start->sub(new DateInterval('P7D'));
+					        $end->sub(new DateInterval('P7D'));
+				        } else {
+					        // In all other cases, subtract a year (for dates like "3rd of November", months like "August"
+					        // and seasons like "Winter")
+					        $start->sub(new DateInterval('P1Y'));
+					        $end->sub(new DateInterval('P1Y'));
+				        }
+			        }
+
+			        if(in_array($origin, ['day'])) {
+			        	// As a day number was given, subtract one month
+				        $start->sub(new DateInterval('P1M'));
+				        $end->sub(new DateInterval('P1M'));
+			        }
+		        }
 	        }
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			// still false, false
 		}
 
@@ -249,16 +271,17 @@ class SkillHelper {
      * night: 00:00, morning: 06:00, afternoon: 12:00, evening: 18:00
      *
      * @param   string      $amazon_time        AMAZON.TIME slot value
-     * @param   \DateTime   $date               DateTime object or null
-     * @return  false|\DateTime
+     * @param   DateTime    $date               DateTime object or null
+     *
+     * @return  false|DateTime
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
      * @see     https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference#time
      */
     public function extractAmazonTime($amazon_time, $date = null) {
 		try {
-	        if(!$date instanceof \DateTime) {
-	            $date = new \DateTime;
+	        if(!$date instanceof DateTime) {
+	            $date = new DateTime;
 	        }
 
 	        switch(true) {
@@ -287,7 +310,7 @@ class SkillHelper {
 		            // do nothing, return defaults set above
 	            break;
 	        }
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			$date = false;
 		}
 
@@ -323,18 +346,18 @@ class SkillHelper {
      * at:          'at'
      * o'clock:     'o\'clock' (mind proper apostrophe escaping)
      *
-     * @param   \DateTime       $date           DateTime object
+     * @param   DateTime        $date           DateTime object
      * @param   array           $options        Options
      * @param   array           $translations   Translations
      * @return  string
      * @access  public
      * @author  a.schmidt@internet-of-voice.de
      */
-    public function convertDateTimeToHuman(\DateTime $date, $options = [], $translations = []) {
+    public function convertDateTimeToHuman(DateTime $date, $options = [], $translations = []) {
 	    $result = array();
 
 		try {
-		    $now  = new \DateTime();
+		    $now  = new DateTime();
 		    $diff = $now->getTimestamp() - $date->getTimestamp();
 
 	        // backwards compatibility
@@ -406,7 +429,7 @@ class SkillHelper {
 	                array_push($result, $minutes);
 	            }
 	        }
-		} catch(\Exception $e) {
+		} catch(Exception $e) {
 			// still empty array
 		}
 
