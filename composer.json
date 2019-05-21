@@ -24,10 +24,16 @@
             "role": "Management"
         }
     ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/internetofvoice/libvoice"
+        }
+    ],
     "require": {
         "php": ">=5.6.0",
         "slim/slim": "^3.8",
-        "internetofvoice/libvoice": "^1.0.0",
+        "internetofvoice/libvoice": "dev-develop",
         "analog/analog": "^1.0.0"
     },
     "require-dev": {
