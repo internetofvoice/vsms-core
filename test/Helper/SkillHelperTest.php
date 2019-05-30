@@ -6,7 +6,7 @@ use DateInterval;
 use DateTime;
 use Exception;
 use InternetOfVoice\VSMS\Core\Helper\SkillHelper;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SkillHelperTest
@@ -15,7 +15,7 @@ use PHPUnit_Framework_TestCase;
  * @license http://opensource.org/licenses/MIT
  */
 
-class SkillHelperTest extends PHPUnit_Framework_TestCase {
+class SkillHelperTest extends TestCase {
 	/**
 	 * testGetDateFromSeason
 	 */
