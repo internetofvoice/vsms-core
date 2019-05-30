@@ -3,6 +3,7 @@
 namespace Tests\InternetOfVoice\VSMS\Core\Helper;
 
 use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TranslationHelperTest
@@ -10,7 +11,7 @@ use InternetOfVoice\VSMS\Core\Helper\TranslationHelper;
  * @author  Alexander Schmidt <a.schmidt@internet-of-voice.de>
  * @license http://opensource.org/licenses/MIT
  */
-class TranslationHelperTest extends \PHPUnit_Framework_TestCase {
+class TranslationHelperTest extends TestCase {
 	/**
 	 * testHelper
 	 */
