@@ -2,6 +2,9 @@
 
 Changes are documented in reverse chronological order.
 
+## Version 1.4.0 (2019-05-30)
+* Switch to libvoice 1.3.0 and PHPUnit 7     
+
 ## Version 1.3.3 (2019-04-01)
 * Extend SkillHelper::extractAmazonDate to recognize XXXX-XX-01 and 2019-01-XX date values     
 
